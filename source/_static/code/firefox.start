@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# move the temp file of firefox into the RAM(/tmp)
+
+#set -x
+
+[ -f /usr/bin/mktemp ] && TEMP=`mktemp -d --tmpdir=/tmp --suffix=.firefox` || \
+    logger -p user.error 'Failed to find the command mktemp'; exit 0
+cp -r /home/liuhui/.mozilla-backup/* $TEMP
+chown -R liuhui.liuhui $TEMP
+ln -s $TEMP /home/liuhui/.mozilla
+
+#set +x

@@ -4,8 +4,9 @@
 
 #set -x
 
-TEMP=`mktemp --tmpdir=/home/liuhui -d`
-mv /tmp/tmp.*.firefox $TEMP && mv $TEMP /home/liuhui/.mozilla-backup
+TEMP='/tmp/tmp.*.firefox'
+rm -rf /home/liuhui/.mozilla-backup
+mv $TEMP /home/liuhui/.mozilla-backup
 rm -f /home/liuhui/.mozilla
 
 #set +x

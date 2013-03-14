@@ -1,0 +1,18 @@
+{
+    "inputfile": {
+                    "name":"summary", 
+                    "delimiter":","
+                 },
+    "outputfile": {
+                    "name":"test2.png",
+                    "dpi":120
+                  },
+    "title": "The Interaction Energy Between $NH_4$...$OH_2$",
+    "xlabel": "d/A",
+    "ylabel": "E/$kcal.mol^{-1}$",
+    "xrange": [1, 10.5],
+    "yrange": [-9, 0.2],
+    "legend": {
+                "location": "lower right"
+              }
+}

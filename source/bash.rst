@@ -34,3 +34,25 @@ Tips 1 **&&**\ 和\ **||**
     command1; command2 && `command3; command4` || `command5; command6`
 
 
+Tips 2 关于删除文件时使用引号的疑问
+===================================
+假定目录结构如下：
+
+|
+| tree abc
+| .
+| ├── a
+| └── b
+|     └── c
+| 
+| 2 directories, 1 file
+
+目标是将目录\ *abc*\ 清空。看看下面两个命令，你认为它们的效果是一样么？
+
+.. sourcecode:: bash
+
+    rm -rf "abc/*"
+    rm -rf abc/*
+
+动手试试上面两个命令，看看结果如何？第一个命令\ ``rm -rf "abc/\*"``\ 不能删除\
+目录\ *abc*\ 下的内容，而第二个命令可以。原因是什么？

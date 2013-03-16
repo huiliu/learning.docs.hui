@@ -4,8 +4,9 @@
 
 #set -x
 
-TEMP='/tmp/tmp.*.firefox'
+TEMP=`ls -d /tmp/tmp.*.firefox`
 rm -rf /home/liuhui/.mozilla-backup
+rm -rf $TEMP/firefox/8vhei1ze.default/Cache/*
 mv $TEMP /home/liuhui/.mozilla-backup
 rm -f /home/liuhui/.mozilla
 

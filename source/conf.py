@@ -177,7 +177,9 @@ latex_elements = {
 #'pointsize': '10pt',
 
 # Additional stuff for the LaTeX preamble.
-#'preamble': '',
+'preamble': """
+    \usepackage{fontspec,xunicode,xltxtra}
+    \setmainfont{unifont}""",
 }
 
 # Grouping the document tree into LaTeX files. List of tuples

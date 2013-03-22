@@ -4,10 +4,16 @@
 
 #set -x
 
+USERNAME=liuhui
+FIREFOX_DIR="/home/${USERNAME}/.mozilla"
+FIREFOX_BACKUP=/home/$USERNAME/.mozilla-backup
+
 [ -f /usr/bin/mktemp ] && TEMP=`mktemp -d --tmpdir=/tmp --suffix=.firefox` || \
     `logger -p user.error 'Failed to find the command mktemp'; exit 0`
-cp -r /home/liuhui/.mozilla-backup/* $TEMP
-chown -R liuhui.liuhui $TEMP
-ln -s $TEMP /home/liuhui/.mozilla
+cp -r ${FIREFOX_BACKUP}/* $TEMP
+chown -R "${USERNAME}.${USERNAME}" $TEMP
+
+[ -L $FIREFOX_DIR ] && rm -f $FIREFOX_DIR
+ln -s $TEMP $FIREFOX_DIR
 
 #set +x

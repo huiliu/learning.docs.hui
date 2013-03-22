@@ -4,10 +4,14 @@
 
 #set -x
 
+USERNAME=liuhui
+FIREFOX_DIR="/home/${USERNAME}/.mozilla"
+FIREFOX_BACKUP=/home/$USERNAME/.mozilla-backup
+
 TEMP=`ls -d /tmp/tmp.*.firefox`
-rm -rf /home/liuhui/.mozilla-backup
+rm -rf $FIREFOX_BACKUP
 rm -rf $TEMP/firefox/8vhei1ze.default/Cache/*
-mv $TEMP /home/liuhui/.mozilla-backup
-rm -f /home/liuhui/.mozilla
+mv $TEMP $FIREFOX_BACKUP
+rm -f $FIREFOX_DIR
 
 #set +x

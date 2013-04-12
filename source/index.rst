@@ -17,6 +17,7 @@ Contents:
     tmux
     matplot
     sql
+    tcp-wrappers
 
 
 Indices and tables

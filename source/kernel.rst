@@ -98,3 +98,11 @@ http://www.cnxct.com/default-configuration-and-performance-of-nginx-phpfpm-and-t
     
 设置这两个参数： **reuse**\ 是表示是否允许重新应用处于TIME-WAIT状态的socket用于\
 新的TCP连接；\ **recyse**\ 是加速TIME-WAIT sockets回收。
+
+调试I/O - 查看是哪个进程在读写硬盘
+------------------------------------
+将\ "**/proc/sys/vm/block_dump**"\ 的值修改为非零值，将进入I/O调试模式，系统中\
+所有的I/O操作都将在内核日志中输出，使用\ `dmesg | tail`\ 就可以看到。
+
+内核文档\ "*Dowcument/sysctl/vm.txt*"\ 和\ "*Document/laptop/laptop-mode.txt*"\
+中对文件\ *block_dump*\ 的功能有介绍。

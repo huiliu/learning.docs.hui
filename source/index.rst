@@ -18,6 +18,7 @@ Contents:
     matplot
     sql
     tcp-wrappers
+    secure_task
 
 
 Indices and tables

@@ -12,6 +12,7 @@ Contents:
     :maxdepth: 2
 
     learning
+    kernel
     firefox
     bash
     tmux

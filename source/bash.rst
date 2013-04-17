@@ -56,3 +56,18 @@ Tips 2 关于删除文件时使用引号的疑问
 
 动手试试上面两个命令，看看结果如何？第一个命令\ ``rm -rf "abc/\*"``\ 不能删除\
 目录\ *abc*\ 下的内容，而第二个命令可以。原因是什么？
+
+
+Tips 3 防御型代码
+==================
+今天看《Shell脚本学习指南》p307页时，发现一段代码：
+
+.. sourcecode:: bash
+
+   grep POSTX_OPEN_MAX /dev/null $(find /usr/include -type f | sort)
+
+就觉得奇怪，为什么要加一个\ `/dev/null`\ 在\ `grep`\ 后面。
+
+因为如果\ `$(find /usr/include -type f | sort)`\ 返回为空，\ `grep`\ 命令就会一\
+直等待终端输入，导致程序“卡死”。
+添加一个\ `/dev/null`\ 的作用就是\ **防止**\ `find`\ **返回为空是程序卡死发生**\ 。

@@ -25,6 +25,8 @@ Welcome to Robin's Blog
     tcp-wrappers
     secure_task
     nginx_directive
+    zabbix
+    github
 
 
 Indices and tables

@@ -3,7 +3,7 @@
 
 Log File Monitoring时ZBX_NOTSUPPORT错误
 =======================================
-配置日志文件监控时一直出错，经过在Zabbix Forums上的提醒[#r1]_，仔细查看了agent\
+配置日志文件监控时一直出错，经过在Zabbix Forums上的提醒\ [#r1]_\ ，仔细查看了agent\
 的调试日志，在其中发现：
 
 .. sourcecode:: text
@@ -110,12 +110,22 @@ Log File Monitoring时ZBX_NOTSUPPORT错误
     ……
 
 通过上面的日志分析，可以发现，server监视agent上的日志文件，需要agent进程可以读\
-取相应的文件，否则会出错。关于监控日志的详细文档见Zabbix Manual[#r2]_[#r3]_[#r4]_
+取相应的文件，否则会出错。关于监控日志的详细文档见Zabbix Manual [#r2]_\ [#r3]_
 
+参考资料
+=========
 .. [#r1] https://www.zabbix.com/forum/showthread.php?t=23033
 .. [#r2] https://www.zabbix.com/documentation/2.0/manual/config/items/itemtypes/log_items
 .. [#r3] https://www.zabbix.com/documentation/2.0/manual/config/items/itemtypes/zabbix_agent#supported_item_keys
 
-* 如何在agent上可以查询自身数据
+
+TODO List
+=========
+* 如何在agent上可以查询自身数据, 命令\ ``zabbix_agentd``\ 可以打印zabbix agent的\
+  数据
+
+.. sourcecode:: bash
+
+    zabbix_agentd -p
+
 * 使用IP/域名配置Server，agent
-    

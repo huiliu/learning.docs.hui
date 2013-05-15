@@ -5,8 +5,10 @@
 ===========
 希望了解当前MySQL Server的下面两个重要的性能指标
 
-* 并发
+* MySQL Server的并发处理能力
 * 磁盘IO
+* CPU
+* 内存
 
 工具
 =====
@@ -76,11 +78,52 @@
 另外一些更为高级的控制：
 
 * –engines，引擎
-* –auto-generate-sql-load-type，测试SQL的类型。类型有mixed，update，write，key，read。
+* –auto-generate-sql-load-type，测试SQL的类型。类型有mixed，update，write，key，
+  read。
 * –number-of-queries，执行的SQL总数量
 * –number-int-cols，表内int列的数量
 * –number-char-cols，表内char列的数量
 * –socket，socket文件位置
+
+低并发时的性能
+===============
+最近看到一篇BLOG"`Why MySQL Performance at Low Concurrency is Important`_"，\
+其主要观点是：
+
+* 并发数为1时，MySQL Server的性能参数是重要的基准参数，因为1个并发时，MySQL
+  Server不会启用多个进程并行的执行请求。在其它不同并发级别的响应时间可以与单并\
+  发的数据进行对比，以观察并发数对响应时间的响应，以及如何系统有效的提高并发性\
+  的尺度和各并发级别的响应时间。
+* 在许多情况下，MySQL的操作都是在单线程情况下进行的。如批处理操作都被设计为单线\
+  程的，MySQL的复制操作也是单线程的（5.6引入了一定的并行复制能力）；大部分的\
+  MySQL维护操作，如\ ``alter table``\ 都是单线程运行的。
+* 更为重要的是，你的系统大部分时间都是在低负载下运行的。在一个正常运行的系统上\
+  系统中MySQL的线程数平均为5个或者更少，当发现系统并发数较高时，系统一般都处于\
+  过载状态。
+* 只关注高并发时的性能有什么问题呢？它可能会误导你对产品的判断。例如：一个系统\
+  在低并发时响应时间相对较长，而在高并发时明显快很多（这是一种典型案例）。如果\
+  只关注高并发时的性能，你可能不能很好的理解为什么在真实的低并发环境中性能更差。
+
+.. _Why MySQL Performance at Low Concurrency is Important:  http://www.mysqlperformanceblog.com/2013/03/27/why-mysql-performance-at-low-concurrency-is-important/
+
+高并发时的性能
+===============
+同一个作者的另篇\ `Blog`_\ 介绍了为什么MySQL Server在高并发时的性能很重要。简\
+言之：
+
+虽然正常运行情况下，系统处于低并发或中并发情形下，不过当系统因为某些原因处理速\
+度稍慢一点点（几十毫秒），需要处理的请求就会大量堆积，如果并发处理能力强，则可\
+以顺利的挺过，系统也会快速恢复正常；如果并发处理能量差，则堆积的请求数将越来越\
+多，最终影响用户体验，甚至导致系统崩溃必须重启。
+
+.. _Blog: http://www.mysqlperformanceblog.com/2013/02/26/why-do-we-care-about-performance-at-high-concurrency/
+
+附录
+========
+
+衡量性能的指标
+----------------
+
 
 参考资料
 ==========

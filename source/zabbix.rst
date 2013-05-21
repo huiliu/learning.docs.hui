@@ -1,8 +1,41 @@
 配置Zabbix
 ***************
 
+安装
+=====
+
+建立数据库
+-----------
+
+配置PHP
+----------
+需要修改PHP的默认参数
+
+.. sourcecode:: ini
+
+   max_execution_time = 300
+   memory_limit = 128M
+   post_max_size = 16M
+   upload_max_filesize = 2M
+   max_input_time = 300
+   # date.timezone = Europe/Riga
+
+配置Zabbix Server
+------------------
+
+配置Zabbix Agent
+------------------
+
+
+SNMP Discovery
+===============
+
+
+安装中可能的问题
+===================
+
 Log File Monitoring时ZBX_NOTSUPPORT错误
-=======================================
+---------------------------------------
 配置日志文件监控时一直出错，经过在Zabbix Forums上的提醒\ [#r1]_\ ，仔细查看了agent\
 的调试日志，在其中发现：
 

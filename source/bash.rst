@@ -71,3 +71,19 @@ Tips 3 防御型代码
 因为如果\ `$(find /usr/include -type f | sort)`\ 返回为空，\ `grep`\ 命令就会一\
 直等待终端输入，导致程序“卡死”。
 添加一个\ `/dev/null`\ 的作用就是\ **防止**\ `find`\ **返回为空是程序卡死发生**\ 。
+
+
+Tips 4 终端打印彩色文字
+=========================
+使用Shell在终端打印彩色文字：
+
+.. sourcecode:: bash
+
+    echo -e "\e[32mHello World!\e[0m"
+
+Python的\ ``print``\ 语句也可以利用相似的语法在终端打开彩色文字：
+
+.. sourcecode:: python
+
+    print("\1x1B[32mHello World\1xB[0m")
+

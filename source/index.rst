@@ -27,6 +27,7 @@ Welcome to Robin's Blog
     nginx_directive
     zabbix
     github
+    net-snmp
 
 
 Indices and tables

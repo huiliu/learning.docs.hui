@@ -22,6 +22,8 @@ Welcome to Robin's Blog
     sql
     mysql_io_benchmark
     github
+    python
+    spider
 
 系统安全
 ^^^^^^^^^^
@@ -32,6 +34,7 @@ Welcome to Robin's Blog
     tcp-wrappers
     selinux
     intrusion
+    penetration-testing
 
 系统监控
 ^^^^^^^^^

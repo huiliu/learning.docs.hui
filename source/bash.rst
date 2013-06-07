@@ -85,5 +85,5 @@ Python的\ ``print``\ 语句也可以利用相似的语法在终端打开彩色�
 
 .. sourcecode:: python
 
-    print("\1x1B[32mHello World\1xB[0m")
+    print("\x1B[32mHello World\x1B[0m")
 

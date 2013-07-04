@@ -87,3 +87,19 @@ Python的\ ``print``\ 语句也可以利用相似的语法在终端打开彩色�
 
     print("\x1B[32mHello World\x1B[0m")
 
+Tips 5 求N天前的日期字符串
+==============================
+个人觉得这个问题要完全正确是要花一点力气的，首先必须考虑以下情况：
+
+* 每个月天数不一样，有28, 30, 31
+* 存在闫年情况，二月份有29天
+
+所以用Shell内置的功能偷了一下懒\ [#ref1]_\ ：
+
+.. literalinclude:: _static/code/shell/calculate_date.sh
+    :language: bash
+
+
+参考资料
+==========
+.. [#ref1]  `date命令用法详解 <http://witmax.cn/linux-date.html>`_

@@ -8,7 +8,7 @@ SVN Q/A
     repo相应的目录下建立一个"**dav**"目录。只需要在对应repo目录上建立一个"**d\
     av**"目录，并修改一下权限就可以。\ [#ref1]_
 
-    .. sourcecode:: shell
+    .. sourcecode:: bash
 
         svnadmin create devops
         mkdir -p devops/dav

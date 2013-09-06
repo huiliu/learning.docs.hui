@@ -26,6 +26,7 @@ Welcome to Robin's Blog
     spider
     gentoo-i18n
     datamining
+    svn
 
 
 系统安全

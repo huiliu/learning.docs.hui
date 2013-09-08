@@ -21,6 +21,7 @@ Welcome to Robin's Blog
     gnuplot
     sql
     mysql_io_benchmark
+    mysql_master_slave
     github
     python
     spider

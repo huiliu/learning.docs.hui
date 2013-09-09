@@ -22,6 +22,7 @@ Welcome to Robin's Blog
     sql
     mysql_io_benchmark
     mysql_master_slave
+    mysql_high_availability
     github
     python
     spider

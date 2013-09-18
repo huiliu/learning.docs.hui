@@ -7,7 +7,7 @@ SVN Q/A
 
     这个是因为版本兼容引起的问题。\ `svnadmin create`\ 一个新的repo时，没有在
     repo相应的目录下建立一个"**dav**"目录。只需要在对应repo目录上建立一个"**d\
-    av**"目录，并修改一下权限就可以。\ [#ref1]_
+    av**"目录，并修改一下权限就可以。\ [#]_
 
     .. sourcecode:: bash
 
@@ -21,8 +21,14 @@ SVN Q/A
 
     要求源仓库和镜像仓库中都必须有“\ *pre-revprop-change*\ ”才算合格。
 
-3.  另外还有一个问题是由于SELinux所引起的，严格按照\ */etc/httpd/conf.d/subversion.conf\ *中的说明操作可以避免问题
+3.  "**Could not open the requested SVN filesystem**, **errcode="13"**"
+    这个问题可能是由于SELinux所引起的，按照\ */etc/httpd/conf.d/subversion.conf*\
+    中的说明操作可以避免。
+
+    ::
+
+        chcon -R -t httpd_sys_content_t repos
 
 参数资料
 =========
-.. [#ref1] http://www.johngirvin.com/archives/subversion-cant-open-activity-db.html
+.. [#] http://www.johngirvin.com/archives/subversion-cant-open-activity-db.html

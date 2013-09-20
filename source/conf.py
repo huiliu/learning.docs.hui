@@ -25,7 +25,8 @@ import sys, os
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.intersphinx',
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest',
+                'sphinx.ext.intersphinx', 'sphinx.ext.graphviz',
                 'sphinx.ext.todo', 'sphinx.ext.coverage', 'sphinx.ext.pngmath',
                 'sphinx.ext.mathjax', 'sphinx.ext.viewcode', 'sphinx.ext.todo']
 
@@ -181,7 +182,7 @@ latex_elements = {
 # Additional stuff for the LaTeX preamble.
 'preamble': """
     \usepackage{fontspec,xunicode,xltxtra}
-    \setmainfont{unifont}""",
+    \setmainfont[Mapping=tex-text]{WenQuanYi Micro Hei Mono}""",
 }
 
 # Grouping the document tree into LaTeX files. List of tuples

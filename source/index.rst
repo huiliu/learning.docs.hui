@@ -26,7 +26,7 @@ Welcome to Robin's Blog
     github
     python
     spider
-    gentoo-i18n
+    gentoo
     datamining
     svn
 

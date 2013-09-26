@@ -1,6 +1,108 @@
 配置管理工具-Puppet
 ************************
 
+Type
+=====
+
+group
+------
+在大多数平台上只能创建组，对于添加组成员由用户属性来控制。\ **group**\ 类型包含以下一些常用的属性：
+
+.. graphviz::
+
+    digraph group {
+        edge [labeldistance=0.1];
+        group -> provider;
+        group -> ensure;
+        group -> name;
+        group -> gid;
+        group -> system;
+        group -> forcelocal;
+
+        ensure -> present;
+        ensure -> absent;
+
+        provider -> aix;
+        provider -> directoryservice;
+        provider -> groupadd;
+        provider -> ldap;
+        provider -> pw;
+        provider -> windows_adsi;
+    }
+
+
+host
+------
+用来管理\ **/etc/hosts**\ 中的host条目。对于MacOS X略有不同。
+
+.. graphviz::
+
+    digraph host {
+        rankdir=LR;
+
+        host -> name;
+        host -> ensure;
+        host -> ip;
+        host -> host_aliases;
+        host -> provider;
+        host -> target;
+
+        ensure -> present;
+        ensure -> absent;
+
+        provider -> parsed;
+
+        target -> "/etc/hosts";
+    }
+
+
+user
+-----
+通常用来管理系统用户，缺少一些管理普通用户的特性。\ **user**\ 类型包含以下一些常见的属性：
+
+.. graphviz::
+
+    digraph user {
+        user -> provider;
+        user -> ensure;
+        user -> name;
+        user -> uid;
+        user -> gid;
+        user -> groups;
+        user -> home;
+        user -> password;
+        user -> shell;
+        user -> system;
+    }
+
+例如
+
+
+file
+-------
+管理文件（目录）和它们的属性。\ **file**\ 类型具有以下常用属性：
+
+.. graphviz::
+
+    digraph file {
+        file -> path;
+        file -> ensure;
+        file -> owner;
+        file -> group;
+        file -> mode;
+        file -> target;
+        file -> content;
+        file -> source;
+
+        ensure -> absent;
+        ensure -> present;
+        ensure -> file;
+        ensure -> directory;
+        ensure -> link;
+
+        content -> "a file";
+        content -> "a string";
+    }
 
 
 问题解答

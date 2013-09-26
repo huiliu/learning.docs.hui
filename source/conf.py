@@ -212,6 +212,9 @@ latex_documents = [
 # If false, no module index is generated.
 #latex_domain_indices = True
 
+graphviz_output_format = 'svg'
+
+# graphviz_dot = '/usr/bin/circo'
 
 # -- Options for manual page output --------------------------------------------
 

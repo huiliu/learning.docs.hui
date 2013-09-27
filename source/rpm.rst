@@ -30,3 +30,6 @@ RPM软件包
 
 
 
+参考资料
+==========
+.. [#]  http://wiki.centos.org/HowTos/CreateLocalRepos

@@ -29,6 +29,8 @@ Welcome to Robin's Blog
     gentoo
     datamining
     svn
+    rpm
+    vim
 
 
 系统安全
@@ -53,6 +55,22 @@ Welcome to Robin's Blog
     puppet
     foreman
 
+持续集成CI
+^^^^^^^^^^^
+.. toctree::
+    :maxdepth: 1
+    
+    jenkins
+
+
+编程
+^^^^^^^^
+.. toctree::
+    :maxdepth: 1
+    
+    sscanf
+    comm_pipe
+    pymysql
 
 
 Indices and tables

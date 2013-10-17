@@ -82,7 +82,7 @@ Master和Slave都需要有足够的磁盘空间存放赤兔客户端源代码，
 5.  设置环境变量\ `JENKINS_HOME`\ 。项目编译大小和本机执行的job数目，将此环境变量指向一个磁盘空间充足的分区。
 6.  从命令行启动jenkins [#]_
 
-    .. code-block:: batch
+    .. code-block:: bat
 
         java -jar Your_Path/jenkins.war --httpPort=80
 
@@ -137,7 +137,7 @@ Master配置完成后，可以新建编译工作进行执行。根据不同平�
     *   启用Unity3D命令行编译，命令行编译参数为：\ `-batchmode -projectPath "F:\jenkins\workspache\android.branch.rh.onwind.cn -executeMethod CommandCompile.BuildAPK -quit`
 5.  发布客户端
 
-    .. code-block:: batch
+    .. code-block:: bat
 
         ::echo off
 
@@ -219,7 +219,7 @@ iOS平台相对比较复杂，需要导入prov, 证书，证书需要解密，�
 1.  此步骤为必需步骤：将“\ **Bundles, StreamingAssets, StreamingIOS**\ ”根据不同平台需求，建立一个符号链接至“\ **Assets/StreamingAssets**\ ”
 2.  对于不同的平台，SVN更新时将其它平台的资源文件排除不更新，以减少更新时间。如Windows平台输出Web版本客户端时，第一次可以先运行：（必须在jenkins的构建步骤中添加）
 
-.. code-block:: batch
+.. code-block:: bat
 
     svn up --force --accept theirs-full --set-depth exclude StreamingAssets\Data --set-depth exclude StreamingAssets\Fx --set-depth exclude StreamingAssets\hud --set-depth exclude StreamingAssets\Model --set-depth exclude StreamingAssets\Music --set-depth exclude StreamingAssets\Scenes --set-depth exclude StreamingAssets\Sound
 
@@ -230,10 +230,10 @@ Unity3D的命令行编译
 =====================
 Unity3D支持命令行编译，常用命令行参数选项有：
 
-    *   -batchmode      启用命令模式
-    *   -projectPath    指定项目路径。Unix环境可以使用$HOME
-    *   -executeMethod  指定执行编译的类与其方法
-    *   -quit           完成自动退出。没有此选项，即使编译完成也不会返回
+*   \-batchmode      启用命令模式
+*   \-projectPath    指定项目路径。Unix环境可以使用环境变量$HOME
+*   \-executeMethod  指定执行编译的类与其方法
+*   \-quit           完成自动退出。没有此选项，即使编译完成也不会返回
 
 一个标准的命令行编译命令如：（与平台无关）
 
@@ -249,16 +249,16 @@ Unity3D支持命令行编译，常用命令行参数选项有：
 常见问题
 =========
 1.  资源，特效，贴图丢失
-
+    
     导致这些问题的原因大多是因为资源的meta文件丢失或混乱所造成的。
 
-        *   gameconfig.cfg文件是否更新正常
-        *   在Unity3D中运行游戏，运行到故障场景时，查看相应的资源加载情况，找到丢失了什么资源，然后去检查相应的meta文件是否存在，与prefeb目录中一致。找到不一致的原因。
-        *   也可能是某次更新时，资源的meta文件丢失，编译时Unity3D会自动为没有meta文件的资源创建一个新的meta文件；而后来丢失的meta文件被补充至SVN服务器，当再次更新时，SVN服务器上的meta文件将不会被下载，就会导致meta文件混乱而找不到资源。
+    *   gameconfig.cfg文件是否更新正常
+    *   在Unity3D中运行游戏，运行到故障场景时，查看相应的资源加载情况，找到丢失了什么资源，然后去检查相应的meta文件是否存在，与prefeb目录中一致。找到不一致的原因。
+    *   也可能是某次更新时，资源的meta文件丢失，编译时Unity3D会自动为没有meta文件的资源创建一个新的meta文件；而后来丢失的meta文件被补充至SVN服务器，当再次更新时，SVN服务器上的meta文件将不会被下载，就会导致meta文件混乱而找不到资源。
 
 2.  项目属性的设定
-
-对于不同的版本的客户端，其输出参数不尽相同。在代码中可以通过Unity3D中的\ `PlayerSettings`\ 类进行设定；在图形界面可以通过菜单\ **File -> Build Settings -> Player Settings**\ 打开选项卡进行设定。当前已通过代码的方式指定（“\ *Assets/Editor/CommandCompiler.cs*\ ”）。
+    
+    对于不同的版本的客户端，其输出参数不尽相同。在代码中可以通过Unity3D中的\ `PlayerSettings`\ 类进行设定；在图形界面可以通过菜单\ **File -> Build Settings -> Player Settings**\ 打开选项卡进行设定。当前已通过代码的方式指定（“\ *Assets/Editor/CommandCompiler.cs*\ ”）。
 
 
 3.  SVN更新时冲突的解决

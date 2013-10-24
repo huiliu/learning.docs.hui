@@ -23,6 +23,23 @@
     
     增加内存吧
 
+3.  在Gentoo上启动时会发生错误：\ “\ **FATAL ERROR: Can't find pcap DAQ!**\ ”。
+
+    原因是因为\ `snort`\ 找到\ ``daq``\ 库文件，使用命令行参数\
+    ``--daq-dir libdaq``\ 。或者在配置文件\ ``/etc/snort/snort.conf``\ 中设定：
+
+    ::
+
+        # config daq: pcap
+        config daq_dir: /usr/lib64/daq
+        # config daq_mode: inline
+        # config daq_var: <var>
+
+4.  在Gentoo上由\ ``systemd``\ 启动\ ``snort``\ 时会发生错误：
+    “\ **FATAL ERROR: Can't set DAQ BPF filter to '**\ ”
+
+    原因还没有找到，从命令行启动没有过任务问题。
+
 
 参考资料
 ==========

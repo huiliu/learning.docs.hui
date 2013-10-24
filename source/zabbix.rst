@@ -26,6 +26,29 @@
 配置Zabbix Agent
 ------------------
 
+安装Windows Agent
+^^^^^^^^^^^^^^^^^^^
+从官方网站上下载Windows的软件包，32位和64位打包在一起。然后按照文档中执行就可以\
+了：
+
+1.  将\ ``agent``\ 安装为Windows服务。
+
+    ..code-block:: bat
+
+        zabbix_agentd.exe --install
+
+    默认配置文件为：\ ``c:\zabbix_agentd.conf``\ 。也可以自由设定：
+
+    ..code-block:: bat
+
+        zabbix_agentd.exe --config 'c:\zabbix\config\zabbix_agentd.conf' --install
+
+2.  启动zabbix Agent
+
+    ..code-block:: bat
+
+        zabbix_agentd.exe [--config 'c:\zabbix\config\zabbix_agentd.conf'] --start
+
 
 SNMP Discovery
 ===============

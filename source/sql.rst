@@ -10,6 +10,27 @@ SQL语言可以分为几个模块：\ **SQL方案语句**\ ，用于定义存储
 构；\ **SQL数据语句**\ ，用于操作数据库中的数据；\ **SQL事务语句**\ ，用于开\
 始、结束或回滚事务。
 
+一定要注意，不同的数据库软件使用的SQL语法略有不同，如果某条语句提示语法错误请\
+查找相应手册，确认语法符合要求。
+
+数据操作
+=========
+
+ALTER TABLE
+-------------
+*   调整列的数据类型（在MariaDB 5.5.32上测试）\ [#]_
+    
+    ..sourcecode:: sql
+
+        ALTER TABLE tbl_name MODIFY [COLUMN] col_name col_definition
+
+*   创建一个主键（在MariaDB 5.5.32上测试）
+    
+    ..sourcecode:: sql
+
+        ALTER TABLE tbl_name ADD PRIMARY KEY (index_col_name)
+
+
 条件过滤-WHERE子句
 ==================
 * 比较操作符有：\ ``=, !=, <>, <, >, LIKE, IN, BETWEEN, IS``\。
@@ -246,3 +267,7 @@ SQL Server使用表锁，页锁和行锁，Oracle只有行锁，MySQL取决于�
 
 视图
 ====
+
+参考资料
+==========
+.. [#]  http://dev.mysql.com/doc/refman/5.5/en/alter-table.html

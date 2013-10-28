@@ -39,6 +39,9 @@
 
         openvasmd --rebuild
 
+7.  启动相关的服务：\ `openvassd`, `openvasad`, `openvasmd`, `gsad`\ 。不同的系统可能不同。Gentoo使用sysvinit时，可以使用\ `/etc/init.d/openvassd start`\ 来启动相关的服务，如果使用\ `systemd`\ ，可以需要自已创建systemd的启动脚本。
+
+8.  进入到\ **openvas**\ Web界面进行扫描。https://localhost
 
 参考资料
 ==========

@@ -28,9 +28,20 @@ Python-MySQL使用心得
 
 如何连接数据库
 ================
+按照Python数据库API规范（PEP 249）规定\ ``MySQLdb``\ 包含一个标准的方法\
+``connect``\ 用来连接数据库。如：\ ::
+
+    import MySQLdb
+
+    conn = MySQLdb.connect(host='localhost', user='root', passwd='', db='test')
+
 
 字符编码的问题
 ----------------
+``MySQLdb``\ 建立与数据库的连接时可以通过额外的参数来指定字符集：\ ::
+
+    import MySQLdb
+    conn = MySQLdb.connect(......, charset='utf8', useunicode=True)
 
 
 如何构造SQL语句

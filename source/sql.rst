@@ -16,17 +16,34 @@ SQL语言可以分为几个模块：\ **SQL方案语句**\ ，用于定义存储
 数据操作
 =========
 
+CREATE TABLE
+-------------
+标准语法定义：
+
+.. sourcecode:: sql
+
+    CREATE [TEMPORARY] TABLE [IF NOT EXISTS] tbl_name
+    [(create_definition,...)] [table_options] [select_statement]
+    -- 或:
+    CREATE [TEMPORARY] TABLE [IF NOT EXISTS] tbl_name [(] LIKE old_tbl_name [)];
+
+*   使用\ ``IF NOT EXISTS``\ 判断表是否存在：
+
+    .. sourcecode:: sql
+    
+        CREATE TABLE IF NOT EXISTS tbl_name ......
+
 ALTER TABLE
 -------------
 *   调整列的数据类型（在MariaDB 5.5.32上测试）\ [#]_
     
-    ..sourcecode:: sql
+    .. sourcecode:: sql
 
         ALTER TABLE tbl_name MODIFY [COLUMN] col_name col_definition
 
 *   创建一个主键（在MariaDB 5.5.32上测试）
     
-    ..sourcecode:: sql
+    .. sourcecode:: sql
 
         ALTER TABLE tbl_name ADD PRIMARY KEY (index_col_name)
 

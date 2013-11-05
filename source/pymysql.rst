@@ -1,6 +1,7 @@
 Python-MySQL使用心得
 *********************
-用\ **Python-MySQLdb**\ 写一个小程序对数据库进行一些更新。输入的数据有下面格式要求：
+用\ **Python-MySQLdb**\ 写一个小程序对数据库进行一些更新。输入的数据有下面格式\
+要求：
 
 1.  每一行为一条数据，由五列组成，列与列之间由英文逗号间隔
 2.  第一，二，五列为数字，第三，四列为字符型
@@ -9,17 +10,16 @@ Python-MySQL使用心得
 
 如何读入数据
 ==============
-最简单的方法是直接读入每行数据，然后分割为列表。代码如下：
+最简单的方法是直接读入每行数据，然后分割为列表。代码如下：\ ::
 
-::
     def GetData(FileName):
         lines = open(FileName, 'r').readlines()
         data = [x.split(',') for x in lines]
         return data
 
-另外一种方法是利用生成器（\ **generator**\ ）\ [#]_\ 更加高效完成这个任务。代码如下：
+另外一种方法是利用生成器（\ **generator**\ ）\ [#]_\ 更加高效完成这个任务。代码\
+如下：\ ::
 
-::
     def GetData(FileName):
         lines = open(FileName, 'r').readlines()
         for line in lines:

@@ -19,7 +19,7 @@ FreeBSD中可以在用户配置文件\ ``~/.login_conf, ~/.profile, ~/.bashrc, ~
 1.  系统级设定\ ``/etc/login.conf``
     修改\ ``/etc/login.conf``\ 中的设定，将对所有用户生效。如：
 
-    .. code-block:: txt
+    .. code-block:: text
 
         language_name|account_type_description:\
             :charset=MIME_charset:\
@@ -36,7 +36,7 @@ FreeBSD中可以在用户配置文件\ ``~/.login_conf, ~/.profile, ~/.bashrc, ~
 
     与系统级设定语法相同，每个用户可以自定义相应的环境参数。
 
-    .. code-block:: txt
+    .. code-block:: text
 
         me:\
             :charset=utf-8:\
@@ -52,7 +52,7 @@ FreeBSD中可以在用户配置文件\ ``~/.login_conf, ~/.profile, ~/.bashrc, ~
     ``vipw``\ 打开的文件比\ ``/etc/passwd``\ 多三个分隔符“:”，其中有一个位置是\
     用来设定Language。如下：
 
-    .. code-block:: txt
+    .. code-block:: text
 
         # /etc/passwd
         xxxxxx:\*:1002:1002:xxxxxx:/home/xxxxxx:/usr/local/bin/bash

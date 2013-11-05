@@ -27,6 +27,7 @@ Welcome to Robin's Blog
     python
     spider
     gentoo
+    freebsd
     datamining
     svn
     rpm

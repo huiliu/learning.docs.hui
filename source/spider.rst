@@ -31,12 +31,21 @@
     下载中间件的作用是什么？如何工作的？
     爬虫在哪里，如何响应Response对象的？
 
+XPath语法
+===========
+XPath 是一门在 XML 文档中查找信息的语言。XPath 用于在 XML 文档中通过元素和属性\
+进行导航。\ [#]_
+
+.. todo::
+
+    准备加入XPath的一些资料和使用心得
+
 
 抓取环境保护部的空气质量数据
-******************************
+==============================
 
 计划
-=====
+-----
 * 利用\ `scrapy`_\ 框架来建立一个爬虫抓取数据
 * 将数据存入到MySQL中
 * 对空气质量进行分析，统计
@@ -44,7 +53,7 @@
 .. _scrapy: http://scrapy.org
 
 操作
-=====
+-----
 按照网页中表格格式在MySQL中建立数据表：
 
 .. code-block:: sql
@@ -56,3 +65,4 @@
 ========
 .. [#]  http://doc.scrapy.org/en/0.18/topics/architecture.html#data-flow
 .. [#]  http://www.magentonotes.com/python-scrapy-architecture.html
+.. [#]  http://www.w3school.com.cn/xpath/xpath_intro.asp

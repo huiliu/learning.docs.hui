@@ -13,13 +13,13 @@ RPM软件包
     ，所以如果在直接下载，依赖链可能并不完整。建议可以在最小安装版的CentOS上进\
     行。使用下面的命令可以从公有仓库下载相应软件包：
 
-    .. codeblock:: bash
+    .. code-block:: bash
 
         yum --downloadonly --downloaddir=/tmp/repos
 
 2.  使用\ `createrepo`\ 命令来创建仓库metadata。
 
-    .. codeblock:: bash
+    .. code-block:: bash
 
         yum install createrepo
         createrepo /tmp/repos

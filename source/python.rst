@@ -23,5 +23,15 @@ The Python yield keyword explained
 
 .. _The Python yield keyword explained: http://stackoverflow.com/questions/231767/the-python-yield-keyword-explained
 
+
+三元运算
+==========
+类似于C和其它语言中的三元运算\ ``(condition) ? a : b``\ 。Python中也提供了一个类似的三元运算：\ [#]_ ::
+
+    # 如果y > 0, x = a；反之x = b
+    x = a if y > 0 else b
+
+
 参考资料
 ==========
+.. [#]  http://blog.csdn.net/jiangnanandi/article/details/3322192

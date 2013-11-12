@@ -50,6 +50,7 @@ Python-MySQL使用心得
 
 如何防止SQL注入
 ----------------
+``MySQLdb.escape_string()``\ 可以将用户的输入进行转义，防止SQL注入。
 
 
 如何提供用户接口

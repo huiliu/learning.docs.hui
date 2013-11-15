@@ -103,3 +103,30 @@ FreeBSD中可以在用户配置文件\ ``~/.login_conf, ~/.profile, ~/.bashrc, ~
         setenv  MM_CHARSET  UTF-8
 
 3.  添加用户，HOME
+
+Shell命令与Linux的不同
+=======================
+
+sed
+-----
+在Linux下，命令\ `sed -i 's/a/b/g' file`\ 可以直接替换文件中的内容，不过在\
+FreeBSD上却需要在选项\ ``-i``\ 后面加上一个空字符""才可以完成同样的任务。看看\
+``man``\ 手册中是怎么说明的。
+
+*   Linux中关于选项\ ``-i``\ 的说明：
+
+    -i[SUFFIX], --in-place[=SUFFIX]
+
+        edit files in place (makes backup if extension supplied)
+
+*   FreeBSD中关于选项\ ``-i``\ 的说明：
+
+    -i extension
+
+        Edit files in-place similarly to -I, but treat each file independently
+        from other files.  In particular, line numbers in each
+        file start at 1, the “$” address matches the last line of the
+        current file, and address ranges are limited to the current file.
+        (See Sed Addresses.)  The net result is as though each file were
+        edited by a separate sed instance.
+

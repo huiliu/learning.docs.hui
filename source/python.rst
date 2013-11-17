@@ -32,6 +32,29 @@ The Python yield keyword explained
     x = a if y > 0 else b
 
 
+嵌套函数的调试
+================
+在写scrapy爬虫时用于嵌套函数，但怎么都不输出期望的结果，再结果，用\ ``pdb``\ 来\
+进行调试，调试进程却怎么也进入不了嵌套函数内部。代码大概如下：\ ::
+
+    def parse(self, response):
+        
+        def News(hxs, xpath, pri):
+            for tmp in hxs.xpath(xpath):
+                item[..] = ..
+
+                request = Request(url, callback=...)
+                request.meta['item'] = item
+
+                yield request
+
+        hxs = Selector()
+        xpath1 = '...'
+        News(hxs, xpath1, 1)
+
+``pdb``\ 调试进程进行到\ ``def News(hxs, xpath, pri)``\ 就退出了，提示：“\
+**Generator exit**\ ”之类的什么。
+
 参考资料
 ==========
 .. [#]  http://blog.csdn.net/jiangnanandi/article/details/3322192

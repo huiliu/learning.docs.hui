@@ -23,6 +23,7 @@ Welcome to Robin's Blog
     mysql_io_benchmark
     mysql_master_slave
     mysql_high_availability
+    mongodb
     github
     python
     spider
@@ -32,6 +33,7 @@ Welcome to Robin's Blog
     svn
     rpm
     vim
+    code_evolution
 
 
 系统安全
@@ -72,6 +74,7 @@ Welcome to Robin's Blog
     :maxdepth: 1
     
     sscanf
+    unicode
     comm_pipe
     pymysql
 

@@ -167,6 +167,47 @@ file
         [agent]
             ssldir = /var/lib/puppet/ssl
 
+问题
+=====
+如何将\ ``puppet``\ 中的变量值传递给命令行
+----------------------------------------------
+写了一个module来执行一个编译任务，目录结果如下：
+
+.. code-block:: text
+
+    stackless/
+            manifests/
+                    init.pp
+                    install.pp
+                    params.pp
+
+其中文件\ ``params.pp``\ 定义了一些变量，如：
+
+.. code-block:: puppet
+
+    class stackless::params {
+        $srcPath = "/home/builder/stackless"
+        $installPath = "/home/builder/local"
+    }
+
+在\ ``install.pp``\ 中执行相关的编译工作，如：
+
+.. code-block:: puppet
+
+    class stackless::install {
+        exec {"configure":
+            cwd => $stackless::params::srcPath,
+            path => ["/bin", "/usr/bin"],
+            command => "chmod 755 configure && ./configure --prefix=$stackless::params::installPath",
+        }
+    }
+
+然后使用此模块，编译正常完成，但是程序被安装到系统目录\ ``/usr``\ 下面。查看“\
+**config.log**\ ”，发现\ ``./configure --prefix=``\ 后面的参数为空。猜想应该时\
+``puppet``\ 直接将\ *command*\ 交给了Shell执行，而没有先进行变量替换而导致的问\
+题。还没有深入了解是否有其它机制将变量先替换然后再转交给Shell。
+
+
 
 参考资料
 =========

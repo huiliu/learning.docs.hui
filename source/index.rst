@@ -31,6 +31,7 @@ Welcome to Robin's Blog
     freebsd
     datamining
     svn
+    svn_mirror
     rpm
     vim
     code_evolution

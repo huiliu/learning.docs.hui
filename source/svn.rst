@@ -53,7 +53,25 @@ SVN Q/A
 
     需要进行一步学习关于SELinux管理的知识，audit2why属于包setroubleshoot
 
+5.  问题描述：
+
+    *   客户端取SVN时指示\ **Cannot open the request svn filesystem**\
+        (记不很清),\ **errcode=70014**
+    *   检查http日志发现：\ `access_log`\ 中相应的请求都是返回500；\
+        `error_log`\ 中提示“\ *(20014)Internal error ...  End of file found*\ ”\
+        “\ *Could not fetch resource information.  [500, #0] Could not open the\
+        requested SVN filesystem  [500, #70014]*\ ”
+    
+    解决：google后发现，是因为相应仓库下的文件\ ``db/current``\ 和\
+    ``db\txn-current``\ 被坏所引起的。\ [#]_\ ``db/current``\ 存放的是当前修订\
+    号；\ ``db/txn-current``\ 应该是存放提交次数之类的数据，此文件为空时，客户\
+    端可以正常获取SVN，但提交时会提示\ **../db/txn-current end of file**\ 之类\
+    的错误。只需要向其中输入一个换行符(``echo > db/txn-current``)就能解决此问题。
+
 
 参数资料
 =========
-.. [#] http://www.johngirvin.com/archives/subversion-cant-open-activity-db.html
+.. [#]  http://www.johngirvin.com/archives/subversion-cant-open-activity-db.html
+.. [#]  http://www.cnblogs.com/vegaliming/archive/2012/05/01/2478351.html
+        http://www.byywee.com/page/M0/S728/728203.html
+

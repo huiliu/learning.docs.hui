@@ -122,11 +122,78 @@ SVN仓库安全之镜像备份
 
 运行上面的命令导出导入数据时，可能会出错中断操作。\ [#]_
 
+重新恢复主－镜像功能
+=======================
+镜像仓库数据导入回主仓库后，主仓库和镜像仓库的数据就完全一致（请确认）。此时运\
+行命令\ ``svnsync sync http://devhome/backup/hello``\ 会收到错误：
 
-参考资料
+.. code-block:: text
+
+    svnsync: Destination HEAD (11295) is not the last merged revision (11297);
+    have you committed to the destination without using svnsync?
+
+从错误推断，镜像仓库应该是不允许提交数据，向镜像仓库提交数据会导致主－镜像无法\
+同步，所以需要重新恢复同步信息。有以下几个欺骗SVN的方法：
+
+*   修改\ */backup/hello/db/current*\ 的值为同步中断时的值，然后重新运行命令\
+    ``svnsync sync http://devhome/backup/hello``\ 。运气好的话可以重新同步成\
+    功。\ 也有可能会出错：
+
+    .. code-block:: text
+
+        Transmitting file data .svnsync: Corrupt representation '25773 0 20806
+        212480 0a6b7637ee622c6f0b2cb8fd8ecb9f48
+        b5c5091ce33b04b5b7cb747b046d0e1114c7a7cc 25772-jwm/_6'
+
+    如果出现上面的错误，请使用命令\ ``svnadmin verify /backup/hello -r revNum``\
+    检查修订号为\ *revNum*\ 的提交数据是否正常，极有可能有问题。
+
+*   使用命令\ ``svnadmin recover /backup/hello``\ 恢复SVN信息，查看打开“\
+    */backup/hello/db/revprop/0/0*\ ”如下：
+
+    .. code-block:: text
+
+        K 8
+        svn:date
+        V 27
+        2009-09-02T04:01:29.647149Z
+        K 26
+        svn:sync-currently-copying
+        V 5
+        25775
+        K 17
+        svn:sync-from-url
+        V 26
+        http://devhome/repos/mdrez
+        K 18
+        svn:sync-from-uuid
+        V 36
+        4c74e609-66f4-4995-99c0-adb26f254cac
+        K 24
+        svn:sync-last-merged-rev
+        V 5
+        25774
+        END
+
+    将“\ **svn:sync-currently-copyin**\ ”和“\ **svn:sync-last-merged-rev**\ ”下\
+    面的修订号，如“25775”，“25774”修改为“\ */backup/hello/db/current*\ ”中的值，\
+    然后进行同步：\ ``svnadmin verify /backup/hello -r revNum``\ 。同步将顺利完\
+    成。但是可以出现其它一些错误。
+
+*   用上面的方法基本可以保留原镜像，主仓库不变而恢复主－镜像架构，但是实际中可\
+    能会出现各种错误。建议完成重建一个镜像仓库。
+
+
+参考说明
 ==========
 .. [#]  运行\ ``svnadmin load``\ 时，如果主仓库（“\ */repos/hello*\ ”）中的文件\
-        有加锁，会出错并中断当前操作。需要删除仓库中的锁才能继续。
+        有加锁，会出错并中断当前操作。如：
+
+        .. code-block:: text
+
+        svnadmin: Cannot verify lock on path '... ...'; no username available
+
+        需要删除仓库中的锁才能继续。
 
         .. code-block:: bash
 

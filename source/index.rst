@@ -78,6 +78,7 @@ Welcome to Robin's Blog
     unicode
     comm_pipe
     pymysql
+    python_network
 
 
 Indices and tables

@@ -136,6 +136,9 @@ MIB的信息可以通过\ `oid-info`_\ 查看。接下假定你有一个正常�
 .. _手册:      https://www.zabbix.com/documentation/2.0/manual/discovery/low_level_discovery
 .. _oid-info:  http://oid-info.com/index.htm
 
+Export and Import
+==================
+
 安装中可能的问题
 ===================
 

@@ -55,6 +55,10 @@ The Python yield keyword explained
 ``pdb``\ 调试进程进行到\ ``def News(hxs, xpath, pri)``\ 就退出了，提示：“\
 **Generator exit**\ ”之类的什么。
 
+浮点保留有效数字
+=================
+内置函数\ ``round``\ 可以完成此任务。
+
 参考资料
 ==========
 .. [#]  http://blog.csdn.net/jiangnanandi/article/details/3322192

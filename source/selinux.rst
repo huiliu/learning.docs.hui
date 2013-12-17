@@ -1,7 +1,7 @@
 探索SELinux
 ***************
 
-学习美国国家安全局的开源工具\ **SELinux**
+学习NSA的开源工具\ **SELinux**
 
 问题
 =====
@@ -81,6 +81,12 @@
     setsebool [-P] item=value
     togglesebool item
     semanage boolean -l
+
+工具
+======
+软件包\ ``policycoreutils-python``\ (CentOS 6), ``policycoreutils``\ (CentOS 5)\
+中包含了命令\ ``audit2allow, audit2why``\ 用来分析\ ``/var/log/audit/audit.log``
+以生成新的SELinux规则，解决被SELinux拦截的问题
 
 参考资料
 ========

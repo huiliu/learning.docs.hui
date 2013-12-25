@@ -56,3 +56,10 @@ diskio_exclude_fd``\ 将它们设定为"yes"，就可以去除磁盘IO表\ ``.1.
    diskio_exclude_loop  yes
 
 .. [#ref1] http://sourceforge.net/p/net-snmp/patches/1129/
+
+问题集锦
+=========
+1.  查询某些项目时提示“\ ``No more variables left in this MIB View (It is past\
+    the end of the MIB tree)``\ ”
+
+    原因： 极有可以是VACM控制中的视图控制限制OID范围

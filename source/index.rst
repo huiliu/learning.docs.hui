@@ -61,6 +61,7 @@ Welcome to Robin's Blog
     net-snmp
     puppet
     foreman
+    nagios
 
 持续集成CI
 ^^^^^^^^^^^

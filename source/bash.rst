@@ -99,6 +99,12 @@ Tips 5 求N天前的日期字符串
 .. literalinclude:: _static/code/shell/calculate_date.sh
     :language: bash
 
+*   利用\ ``date``\ 命令自身功能更加简单方便：
+
+.. sourcecode:: bash
+
+    date -d '-2 day' '+%Y%m%d'
+    # output:   20140118
 
 参考资料
 ==========

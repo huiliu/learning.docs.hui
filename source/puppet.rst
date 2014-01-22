@@ -1,12 +1,107 @@
 配置管理工具-Puppet
 ************************
 
+Resource Ordering
+===================
+回想一下手动配置一个Apache服务器要经过那些步骤：
+
+1.  安装软件包\ ``httpd``\
+2.  根据需要修改配置文件
+3.  启动\ ``httpd``\ 服务
+
+那么使用\ ``puppet``\ 进行配置管理时，应该定义三个相应的资源来执行：
+
+.. sourcecode:: puppet
+
+    # install httpd
+    package {"httpd":
+        ensure => present,
+    }
+    file {"/etc/httpd/conf/httpd.conf":
+        ensure => present,
+        owner => root,
+        group => root,
+        mode => 0644,
+        source => "puppet:///modules/$module_name/httpd.conf",
+    }
+    service {"httpd":
+        ensure => running,
+    }
+
+当你实际应用上面的\ ``manifests``\ 时会发现执行失败（当然也可能成功）。原因呢？\
+前面提到的手动操作步骤是存在先后顺序的，如果不按照相应的顺序，要么失败，要么结\
+果不是预期的。这也就要求\ ``puppet``\ 中定义的资源在执行时应该可以设定先后顺序\
+，即\ `Resource Ordering`_\ 。
+
+
+``puppet``\ 提供了四个关键字和两个符号来实现"**Ordering**"的控制：
+
+1.  ``before``
+2.  ``require``
+3.  ``notify``
+4.  ``subscribe``
+5.  ``->``
+6.  ``~>``
+
+前面四个关键字在\ ``puppet``\ 中称之为元参数（\ `metaparameters`_\ ），它们可\
+以接受引用资源（\ `resource reference`_\ ）作为其值。
+
+用\ ``before``\ 和\ ``require``\ 改写上面的\ ``manifests``\ 以按照手动顺序完成：
+
+.. sourcecode:: puppet
+
+    # install httpd
+    package {"httpd":
+        ensure => present,
+        before => File['/etc/httpd/conf/httpd.conf'],
+    }
+    file {"/etc/httpd/conf/httpd.conf":
+        ensure => present,
+        owner => root,
+        group => root,
+        mode => 0644,
+        source => "puppet:///modules/$module_name/httpd.conf",
+    }
+    service {"httpd":
+        ensure => running,
+        require => ['/etc/httpd/conf/httpd.conf'],
+    }
+
+``notify``\ 是增强版式的\ ``before``\，当使用了\ ``notify``\ 的资源发生变化就会\
+主动通知\ ``notify``\ 指向的资源；而\ ``subscribe``\ 是增强版的\ ``require``\ ,\
+当\ ``subscribe``\ 指向的资源发生的变更，当前资源就会收到通知。
+
+``->``\ 和\ ``~>``\ 意思犹如流程图，从前往后一步一步完成：
+
+.. sourcecode:: puppet
+
+    # install httpd
+    package {"httpd":
+        ensure => present,
+    }
+    file {"/etc/httpd/conf/httpd.conf":
+        ensure => present,
+        owner => root,
+        group => root,
+        mode => 0644,
+        source => "puppet:///modules/$module_name/httpd.conf",
+    }
+    service {"httpd":
+        ensure => running,
+    }
+
+    Package['httpd'] -> File["/etc/httpd/conf/httpd.conf"] -> Service['httpd']
+
+
+
+
 Type
 =====
 
 group
 ------
-在大多数平台上只能创建组，对于添加组成员由用户属性来控制。\ **group**\ 类型包含以下一些常用的属性：
+在大多数平台上只能创建组，对于添加组成员由用户属性来控制。\ **group**\ 类型包含\
+以下一些常用的属性：
 
 .. graphviz::
 
@@ -58,7 +153,8 @@ host
 
 user
 -----
-通常用来管理系统用户，缺少一些管理普通用户的特性。\ **user**\ 类型包含以下一些常见的属性：
+通常用来管理系统用户，缺少一些管理普通用户的特性。\ **user**\ 类型包含以下一些\
+常见的属性：
 
 .. graphviz::
 
@@ -214,3 +310,7 @@ file
 .. [#ref1] http://projects.puppetlabs.com/projects/1/wiki/certificates_and_security
 .. [#ref2] http://smartest.blog.51cto.com/3585938/1016576
 .. [#ref3] http://bitcube.co.uk/content/puppet-errors-explained
+
+.. _Resource Ordering: http://docs.puppetlabs.com/learning/ordering.html
+.. _metaparameters: http://docs.puppetlabs.com/references/stable/metaparameter.html
+.. _resource reference: http://docs.puppetlabs.com/puppet/latest/reference/lang_datatypes.html#resource-references

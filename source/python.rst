@@ -59,6 +59,24 @@ The Python yield keyword explained
 =================
 内置函数\ ``round``\ 可以完成此任务。
 
+
+脚本中获取其所在路径
+=====================
+为了保证路径的正确，在脚本中需要获取其所在的路径，有多种不同的方法可以得到此值\
+，不过它们确有不同的适用范围：
+
+.. sourcecode:: python
+
+    import sys
+    import os
+
+    # 使用py2exe，无法使用变量__file__，而且sys.argv[0]取得的值也可能不正确
+    # 只有sys.executable可以取得正确的期望值
+    print(os.path.dirname(os.path.realpath(__file__)))
+    print(sys.executable)
+    print(sys.argv[0])
+
+
 参考资料
 ==========
 .. [#]  http://blog.csdn.net/jiangnanandi/article/details/3322192

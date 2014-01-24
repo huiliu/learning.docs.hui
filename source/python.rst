@@ -31,6 +31,8 @@ The Python yield keyword explained
     # 如果y > 0, x = a；反之x = b
     x = a if y > 0 else b
 
+首先会对中间条件求值，如果为True，再对\ ``if``\ 左边表达式求值，否则对\ ``else``\ 后面的表达式求值。
+
 
 嵌套函数的调试
 ================
@@ -60,6 +62,7 @@ The Python yield keyword explained
 内置函数\ ``round``\ 可以完成此任务。
 
 
+<<<<<<< HEAD
 脚本中获取其所在路径
 =====================
 为了保证路径的正确，在脚本中需要获取其所在的路径，有多种不同的方法可以得到此值\
@@ -75,8 +78,53 @@ The Python yield keyword explained
     print(os.path.dirname(os.path.realpath(__file__)))
     print(sys.executable)
     print(sys.argv[0])
+=======
+函数参数部分求值
+=================
+**currying**\ [#book]_ ::
+
+    def foo(x, y, z):
+        return x + y + z
+
+    from functools import partial
+    f = partial(foo, 1, 2)          # 为foo的参数x, y提供值
+    f(3)                            # 调用foo(1, 2, 3), 结果为6
+
+enumerate函数和zip函数
+========================
+请看下面的代码：\ [#book]_ \ ::
+
+    # Part 1
+    i = 0 
+    for x in s:
+        # ......
+        i += 1
+
+    # 替代方法
+    for i, x in enumerate(s):
+        # ......
+
+    # Part 2
+    i = 0
+    while i < len(s) and i < len(t)
+        x = s[i]
+        y = t[i]
+        # ......
+        i += 1
+
+    # 替代方法
+    for x, y in zip(s, t):
+        # ......
+
+``enumerate``\ 创建一个迭代器，返回一个元组序列(0, s[0]), (1, s[1]) ...
+``zip``\ 包装的两个序列如果长度不等，较短的索引完将结束。在Python 2中，\
+``zip``\ 将一次性用两个序列生成一个元组列表，数据量较大时可能出现不可预测的结\
+果，函数\ ``itertools.izip()``\ 的实现效果与\ ``zip``\ 一致，不过每次仅生成一\
+个元组，Python 3中，\ ``zip``\ 生成值的方式与之一样。
+>>>>>>> 2f95b866dad0d36256e179cfa7445c6cb42a9c0f
 
 
 参考资料
 ==========
 .. [#]  http://blog.csdn.net/jiangnanandi/article/details/3322192
+.. [book]  David M. Beazley Python Essential Reference (4th)

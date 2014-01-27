@@ -76,10 +76,10 @@ The Python yield keyword explained
     print(os.path.dirname(os.path.realpath(__file__)))
     print(sys.executable)
     print(sys.argv[0])
-=======
+
 函数参数部分求值
 =================
-**currying**\ [#book]_ ::
+**currying**\ [book]_ ::
 
     def foo(x, y, z):
         return x + y + z
@@ -90,7 +90,9 @@ The Python yield keyword explained
 
 enumerate函数和zip函数
 ========================
-请看下面的代码：\ [#book]_ \ ::
+请看下面的代码：\ [book]_
+
+.. sourcecode:: python
 
     # Part 1
     i = 0 
@@ -120,8 +122,9 @@ enumerate函数和zip函数
 果，函数\ ``itertools.izip()``\ 的实现效果与\ ``zip``\ 一致，不过每次仅生成一\
 个元组，Python 3中，\ ``zip``\ 生成值的方式与之一样。
 
+.. [book]  David M. Beazley Python Essential Reference (4th)
 
 参考资料
 ==========
 .. [#]  http://blog.csdn.net/jiangnanandi/article/details/3322192
-.. [book]  David M. Beazley Python Essential Reference (4th)
+

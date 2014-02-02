@@ -81,6 +81,7 @@ Welcome to Robin's Blog
     comm_pipe
     pymysql
     python_network
+    lsp01
 
 
 Indices and tables

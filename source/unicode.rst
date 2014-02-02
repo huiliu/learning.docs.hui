@@ -5,3 +5,9 @@
 UTF-8和UTF-8 BOM
 =================
 查看一下\ `Notepad++`_\ 的格式菜单就会发现
+
+.. _Notepad++:  http://notepad-plus-plus.org/
+
+
+参考资料
+========

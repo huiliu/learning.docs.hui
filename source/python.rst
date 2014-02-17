@@ -90,7 +90,7 @@ The Python yield keyword explained
 
 enumerate函数和zip函数
 ========================
-请看下面的代码：\ [book]_
+请看下面的代码：\ [#book]_
 
 .. sourcecode:: python
 
@@ -122,7 +122,18 @@ enumerate函数和zip函数
 果，函数\ ``itertools.izip()``\ 的实现效果与\ ``zip``\ 一致，不过每次仅生成一\
 个元组，Python 3中，\ ``zip``\ 生成值的方式与之一样。
 
-.. [book]  David M. Beazley Python Essential Reference (4th)
+.. [#book]  David M. Beazley Python Essential Reference (4th)
+
+``str.ltrip()``的BUG么？
+=========================
+如下代码：\ ::
+
+    a = 'Nmap scan report for prog-xxxx.devel.xxx.xxx (10.1.2.245)'
+    a.lstrip('Nmap scan report for ')
+    # 得到的结果：'g-xxxx.devel.xxx.xxx (10.1.2.245)'
+
+这是BUG么？
+
 
 参考资料
 ==========

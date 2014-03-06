@@ -124,8 +124,8 @@ enumerate函数和zip函数
 
 .. [#book]  David M. Beazley Python Essential Reference (4th)
 
-``str.ltrip()``的BUG么？
-=========================
+``str.ltrip()``\ 的BUG么？
+==========================
 如下代码：\ ::
 
     a = 'Nmap scan report for prog-xxxx.devel.xxx.xxx (10.1.2.245)'
@@ -133,6 +133,27 @@ enumerate函数和zip函数
     # 得到的结果：'g-xxxx.devel.xxx.xxx (10.1.2.245)'
 
 这是BUG么？
+
+时间测量
+========
+测量一段代码的运行时间的基本思想：在代码运行前取一下系统时间，运行结束时取一下\
+系统时间，两者之差就是。\ `Python`\ 中的实现：\ ::
+
+    import time
+    start = time.time()
+    cpu_start = time.clock
+    # blabla ......
+    # you code
+    end = time.time()
+    cpu_end = time.clock()
+    consumer = end - start
+    cpu = cpu_start - cpu_end
+
+``time.time()``\ 返回一个从时间元年到当前的秒数（浮点数）。注意不同系统提供的时\
+间精度可能不尽相同。
+
+``time.clock()``\ 在Unix上返回当前CPU时间，单位为秒的浮点数，其精度依赖于同名C\
+函数；Windows上返回与第一次调用此函数的时间差。
 
 
 参考资料

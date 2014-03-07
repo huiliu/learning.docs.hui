@@ -30,6 +30,8 @@ Welcome to Robin's Blog
     rpm
     vim
     code_evolution
+    php
+    mediawiki
 
 数据库
 ^^^^^^
@@ -42,6 +44,7 @@ Welcome to Robin's Blog
     mysql_high_availability
     mysql_privileges
     mongodb
+    mysql_backup
 
 系统安全
 ^^^^^^^^^^

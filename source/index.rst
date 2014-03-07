@@ -19,11 +19,6 @@ Welcome to Robin's Blog
     tmux
     matplot
     gnuplot
-    sql
-    mysql_io_benchmark
-    mysql_master_slave
-    mysql_high_availability
-    mongodb
     github
     python
     spider
@@ -36,6 +31,17 @@ Welcome to Robin's Blog
     vim
     code_evolution
 
+数据库
+^^^^^^
+.. toctree::
+    :maxdepth: 1
+
+    sql
+    mysql_io_benchmark
+    mysql_master_slave
+    mysql_high_availability
+    mysql_privileges
+    mongodb
 
 系统安全
 ^^^^^^^^^^

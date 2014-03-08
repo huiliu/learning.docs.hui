@@ -200,7 +200,7 @@ SVN仓库安全之镜像备份
 
         .. code-block:: text
 
-        svnadmin: Cannot verify lock on path '... ...'; no username available
+            svnadmin: Cannot verify lock on path '... ...'; no username available
 
         需要删除仓库中的锁才能继续。
 

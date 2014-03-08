@@ -44,8 +44,8 @@ Shell中的实现
 Python中的实现
 ================
 
+.. sourcecode:: python
 
-::
     #!/bin/env python
 
     import sys

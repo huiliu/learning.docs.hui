@@ -5,13 +5,21 @@ MySQL权限管理
 存取控制步骤
 ============
 1.  身份核实。根据访问的源主机，用户名，密码来判断是否有连接权限
-2.  请求核实。对通过身份核实的用户所发出的请求，对比\ ``mysql``\ 库中的\ ``user, host, db, tables_priv``\ 等权限控制表来核实用户是否有权限执行数额请求操作。
+2.  请求核实。对通过身份核实的用户所发出的请求，对比\ ``mysql``\ 库中的\
+    ``user, host, db, tables_priv``\ 等权限控制表来核实用户是否有权限执行数额请\
+    求操作。
 
 阶段一：身份核实
 ----------------
-进行连接身份核实时，MySQL Server会将客户端的输入信息与\ ``mysql.user``\ 表中的\ ``user, host, password``\ 字段进行核实，以判断是否允许连接。（注意MySQL Server没有直接排除用户，主机的功能）
+进行连接身份核实时，MySQL Server会将客户端的输入信息与\ ``mysql.user``\ 表中的\
+``user, host, password``\ 字段进行核实，以判断是否允许连接。（注意MySQL Server\
+没有直接排除用户，主机的功能）
 
-在\ ``mysql.user``\ 中经常会出现多个匹配项目，MySQL Server的原则是：\ **将第一个与\ ``user``\ 匹配的权限返回**\ 。（注意不是路由的最大匹配原则）当MySQL Server载入授权表时会以\ ``host, user``\ 字段对授权表进行排序，匹配时会按照排序后的先后顺序来匹配。排序的基本原则是：\ **指明越具体排名越靠前**\ 。例如\ ``mysql.user``\ 中数据如下：
+在\ ``mysql.user``\ 中经常会出现多个匹配项目，MySQL Server的原则是：\ **将第一个
+与\ ``user``\ 匹配的权限返回**\ 。（注意不是路由的最大匹配原则）当MySQL Server载
+入授权表时会以\ ``host, user``\ 字段对授权表进行排序，匹配时会按照排序后的先后顺
+序来匹配。排序的基本原则是：\ **指明越具体排名越靠前**\ 。例如\ ``mysql.user``\
+中数据如下：
 
 +-----------+----------+
 | Host      | User     |
@@ -39,13 +47,17 @@ MySQL权限管理
 | %         | root     |
 +-----------+----------+
 
-那么当\ ``jeffrey``\ 从\ ``localhost``\ 来访问时，实际上会匹配第二条（localhost,用户名为匿名）。
+那么当\ ``jeffrey``\ 从\ ``localhost``\ 来访问时，实际上会匹配第二条（localhost\
+, 用户名为匿名）。
 
-由于多条权限匹配时不确定当前用户时可以使用\ ``SELECT CURRENT_USER()``\ 来查看当前用户。
+由于多条权限匹配时不确定当前用户时可以使用\ ``SELECT CURRENT_USER()``\ 来查看当\
+前用户。
 
 阶段二：访问控制，请求核实
 --------------------------
-对于用户的每个请求MySQL Server对核查授权表以检查是否有相应的权限。授权表主要包括：\ ``mysql.(user, host, db, tables_priv)``\ 。需要说明的是\ ``mysql.user``\ 中的权限设定是全局的，应该只在此表中授予超级用户权限。
+对于用户的每个请求MySQL Server对核查授权表以检查是否有相应的权限。授权表主要包\
+括：\ ``mysql.(user, host, db, tables_priv)``\ 。需要说明的是\ ``mysql.user``\
+中的权限设定是全局的，应该只在此表中授予超级用户权限。
 
 权限更改何时生效
 ----------------
@@ -54,8 +66,11 @@ MySQL权限管理
         1.  表和列权限在客户端的下一次请求时生效。
         2.  数据库权限改变在下一个USE db_name命令生效。
         3.  全局权限的改变和密码改变在下一次客户端连接时生效。
-3.  如果用\ ``GRANT、REVOKE``\ 或\ ``SET PASSWORD``\ 对授权表进行修改，服务器会注意到并立即重新将授权表载入内存。
-4.  如果你手动地修改授权表(使用\ ``INSERT、UPDATE或DELETE``\ 等等)，你应该执行\ ``mysqladmin flush-privileges或mysqladmin reload``\ 告诉服务器再装载授权表，否则你的更改将不会生效，除非你重启服务器
+3.  如果用\ ``GRANT、REVOKE``\ 或\ ``SET PASSWORD``\ 对授权表进行修改，服务器会\
+    注意到并立即重新将授权表载入内存。
+4.  如果你手动地修改授权表(使用\ ``INSERT、UPDATE或DELETE``\ 等等)，你应该执行\
+    ``mysqladmin flush-privileges或mysqladmin reload``\ 告诉服务器再装载授权表\
+    ，否则你的更改将不会生效，除非你重启服务器
 
 用户管理
 ========
@@ -84,12 +99,16 @@ MySQL权限管理
 ^^^^^^^^^^^^
 当忘记root密码时，需要关闭MySQL Server，
 
-1.  方法一：然后增加选项\ ``--skip-grant-tables``\ 来重启Server，再以root登陆MySQL Server，执行上面的语句重置密码。
-2.  方法二：另外还可以将上面的\ ``SET ...``\ 语句的内容写入到一个文件中（如mysql.init），然后用\ ``mysqld_safe --init-file=./mysql.init &``\ 来启动Server。（注意删除mysql.init，此方法不如一安全）
+1.  方法一：然后增加选项\ ``--skip-grant-tables``\ 来重启Server，再以root登陆\
+    MySQL Server，执行上面的语句重置密码。
+2.  方法二：另外还可以将上面的\ ``SET ...``\ 语句的内容写入到一个文件中（如\
+    mysql.init），然后用\ ``mysqld_safe --init-file=./mysql.init &``\ 来启动\
+    Server。（注意删除mysql.init，此方法不如一安全）
 
 限制账户资源
 ------------
-在MySQL Server配置选项中有选项\ ``max_user_connections``\ 可以全局控制单个用户的同时连接数。
+在MySQL Server配置选项中有选项\ ``max_user_connections``\ 可以全局控制单个用户\
+的同时连接数。
 
 在授权表\ ``mysql.user``\ 中有几个额外的选项可以更加精确的用户访问资源进行限制：
 *   ``max_questions``
@@ -115,7 +134,8 @@ MySQL权限管理
 
 该语句没有改变账户的已有权限，只修改了指定的限制值。
 
-**取消限制**\ 只需要将相应的值设定为0即可。\ **重置所有帐户**\ 的记数：\ ``FLUSH USER_RESOURCES``\ 或者\ ``FLUSH PRIVILEGES``\ 。
+**取消限制**\ 只需要将相应的值设定为0即可。\ **重置所有帐户**\ 的记数：\
+``FLUSH USER_RESOURCES``\ 或者\ ``FLUSH PRIVILEGES``\ 。
 
 参考资料
 ========

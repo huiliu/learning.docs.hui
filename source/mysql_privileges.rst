@@ -111,6 +111,7 @@ MySQL权限管理
 的同时连接数。
 
 在授权表\ ``mysql.user``\ 中有几个额外的选项可以更加精确的用户访问资源进行限制：
+
 *   ``max_questions``
 *   ``max_updates``
 *   ``max_connections``

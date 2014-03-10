@@ -102,8 +102,7 @@ html_theme = 'bootstrap'
 # documentation.
 #html_theme_options = {}
 html_theme_options = {
-    'source_link_position': 'footer',
-    'bootswatch_theme': 'cosmo'
+    'source_link_position': 'footer'
     }
 
 # Add any paths that contain custom themes here, relative to this directory.

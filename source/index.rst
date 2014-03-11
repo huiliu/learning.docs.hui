@@ -8,20 +8,16 @@ Welcome to Robin's Blog
 
 文章列表
 -----------
-
 .. toctree::
     :maxdepth: 1
 
     learning
-    kernel
     firefox
     bash
     tmux
     matplot
     gnuplot
     github
-    python
-    spider
     gentoo
     freebsd
     datamining
@@ -29,9 +25,17 @@ Welcome to Robin's Blog
     svn_mirror
     rpm
     vim
-    code_evolution
     php
+    nginx_directive
     mediawiki
+
+内核
+^^^^^
+.. toctree::
+    :maxdepth: 1
+
+    kernel
+    lsp01
 
 数据库
 ^^^^^^
@@ -43,8 +47,8 @@ Welcome to Robin's Blog
     mysql_master_slave
     mysql_high_availability
     mysql_privileges
-    mongodb
     mysql_backup
+    mongodb
 
 系统安全
 ^^^^^^^^^^
@@ -59,13 +63,13 @@ Welcome to Robin's Blog
     snort
     openvas
     jail
+    logfilter
 
 系统监控
 ^^^^^^^^^
 .. toctree::
     :maxdepth: 1
 
-    nginx_directive
     zabbix
     net-snmp
     puppet
@@ -88,9 +92,17 @@ Welcome to Robin's Blog
     sscanf
     unicode
     comm_pipe
+
+Python
+^^^^^^
+.. toctree::
+    :maxdepth: 1
+
+    python
+    spider
     pymysql
     python_network
-    lsp01
+    code_evolution
 
 
 Indices and tables

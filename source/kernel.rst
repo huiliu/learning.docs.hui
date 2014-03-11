@@ -35,14 +35,8 @@ So，今天重新配置Nginx反向代理时，想将主机上的php-fpm设置为
 然而在网上看到了一些这方面的讨论：
 
 * 淘宝运维发生过，流量升高\ **TIME_WAIT**\ 增加，最后在error.log中出现N多(3W+) \
-  的连接MySQL失败。经他们分析认为是因为流量增大，服务器端口不够用引起的。
-
-http://www.searchtb.com/2012/05/mysql_time_wait.html
-
-* 另外有人说，用\ **Unix Socket**\ 并没有太大作用
-
-http://www.cnxct.com/default-configuration-and-performance-of-nginx-phpfpm-and-tcp-socket-or-unix-domain-socket/
-
+  的连接MySQL失败。经他们分析认为是因为流量增大，服务器端口不够用引起的。\ [#]_
+* 另外有人说，用\ **Unix Socket**\ 并没有太大作用\ [#]_
 * 介绍针对**TIME_WAIT**情况，内核的优化：
 
 +-----------------------------------------------+------------------------------+
@@ -99,6 +93,24 @@ http://www.cnxct.com/default-configuration-and-performance-of-nginx-phpfpm-and-t
 设置这两个参数： **reuse**\ 是表示是否允许重新应用处于TIME-WAIT状态的socket用于\
 新的TCP连接；\ **recyse**\ 是加速TIME-WAIT sockets回收。
 
+``TIME_WAIT``\ 引发的日志提示
+------------------------------
+当系统中处于\ ``TIME_WAIT``\ 状态的连接数超过\ ``net.ipv4.tcp_max_tw_buckets``\
+的设定值，系统日志中将出现如下消息：
+
+.. sourcecode:: text
+
+    printk: 130 messages suppressed.
+    TCP: time wait bucket table overflow
+    printk: 75 messages suppressed.
+    TCP: time wait bucket table overflow
+    printk: 119 messages suppressed.
+    TCP: time wait bucket table overflow
+    printk: 23 messages suppressed.
+    TCP: time wait bucket table overflow
+    printk: 123 messages suppressed.
+
+
 调试I/O - 查看是哪个进程在读写硬盘
 ====================================
 将\ "**/proc/sys/vm/block_dump**"\ 的值修改为非零值，将进入I/O调试模式，系统中\
@@ -106,3 +118,8 @@ http://www.cnxct.com/default-configuration-and-performance-of-nginx-phpfpm-and-t
 
 内核文档\ "*Dowcument/sysctl/vm.txt*"\ 和\ "*Document/laptop/laptop-mode.txt*"\
 中对文件\ *block_dump*\ 的功能有介绍。
+
+参考资料
+========
+.. [#]  http://www.searchtb.com/2012/05/mysql_time_wait.html
+.. [#]  http://www.cnxct.com/default-configuration-and-performance-of-nginx-phpfpm-and-tcp-socket-or-unix-domain-socket/

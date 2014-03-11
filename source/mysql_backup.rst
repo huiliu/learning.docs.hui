@@ -282,6 +282,53 @@ Dumping Table Definitions and Content Separately
 构恢复正常后再导入数据，并确认正常。
 
 
+Point-in-Time Recovery - mysqlbinlog
+====================================
+通过全备份/增量备份，我们可以通过工具\ ``mysqlbinlog``\ 从二进制日志中逐步恢复\
+数据。执行SQL语句\ ``SHOW BINARY LOGS``\ 可以查看二进制日志列表；\ ``SHOW MASTER
+STATUS``\ 可以查看当前正在使用日志文件。
+
+可以通过命令\ :code:`mysqlbinlog binlog_file | mysq -u root -p`\ 来恢复数据，也\
+可以通过命令\ :code:`mysqlbinlog binlog_file | less`\ 来查看binlog中的内容。
+
+另外需要注意的是，从binlog恢复数据时，如果是恢复多个文件，应该在单个连接中完成\
+多个文件的恢复，即：
+
+.. sourcecode:: bash
+
+    mysqlbinlog binlog.00001 binlog.00002 binlog.00003 | mysql -u root -p
+    # 或者
+    mysqlbinlog binlog.00001 > log.sql
+    mysqlbinlog binlog.00002 >> log.sql
+    mysqlbinlog binlog.00003 >> log.sql
+    mysql -u root -p -e 'source log.sql'
+
+依据时间恢复
+------------
+``mysqlbinlog``\ 有两个选项\ ``--start-datetime``\ 和\ ``--stop-datetime``\ 可\
+以设定从某个时间点开始恢复，或者恢复至某个时间点。如：
+
+.. sourcecode:: bash
+
+    # 恢复至2005年4月20号上午10点
+    shell> mysqlbinlog --stop-datetime="2005-04-20 9:59:59" /var/lib/mysql/binlog.123456 | mysql -u root -p
+    # 从2005年4月20号上午10点开始恢复
+    shell> mysqlbinlog --start-datetime="2005-04-20 9:59:59" /var/lib/mysql/binlog.123456 | mysql -u root -p
+
+依据事件点来恢复
+----------------
+为了能够准确的恢复到某个日志位置，需要确定日志中期望事件的\ `log_pos`\ 。
+
+.. sourcecode:: bash
+
+    # 释放出binlog中的内容
+    shell> mysqlbinlog /var/lib/mysql/binlog.00001 > log.sql
+    查看log.sql中查看\ `log_pos`\ 然后找到合适位置
+    shell> mysqlbinlog --start-position=368315 /var/log/mysql/bin.123456 | mysql -u root -p
+
+需要注意的是恢复后的数据，相关的时间均为日志中的时间。
+
+
 参考资料
 ========
 .. [#]  http://dev.mysql.com/doc/mysql-backup-excerpt/5.5/en/backup-types.html

@@ -187,7 +187,7 @@ Dumping Data in SQL Format
 
         mysqldump --databases db1 db2 db3 > dump.sql
 
-*   ``--add-drop-database`` **添加\ ``DROP DATABASE``\ 语句**
+*   ``--add-drop-database`` **添加**\ ``DROP DATABASE``\ **语句**
 
     .. sourcecode:: bash
 
@@ -331,13 +331,15 @@ STATUS``\ 可以查看当前正在使用日志文件。
 MyISAM表的维护与恢复
 ====================
 
-由\ ``MyISAM``\ 引擎的特点决定对表数据进行更新整理可以减少使用空间，提高访问性能，而且可以减少表数据出现故障的几率。所以使用\ ``MyISAM``\ 引擎的表需要制定周期性计划对表进行优化整理。
+由\ ``MyISAM``\ 引擎的特点决定对表数据进行更新整理可以减少使用空间，提高访问性\
+能，而且可以减少表数据出现故障的几率。所以使用\ ``MyISAM``\ 引擎的表需要制定周\
+期性计划对表进行优化整理。
 
 使用\ ``MyISAM``\ 引擎的表在对应的数据库目录下存在三个文件：
 
 +---------------+----------------------------+
 | File          | Purpose                    |
-+-------------+------------------------------+
++---------------+----------------------------+
 | tbl_name.frm  | Definition (format) file   |
 +---------------+----------------------------+
 | tbl_name.MYD  | Data file                  |
@@ -345,24 +347,162 @@ MyISAM表的维护与恢复
 | tbl_name.MYI  | Index file                 |
 +---------------+----------------------------+
 
-MyISAM的周期维护
------------------
-优化\ `MyISAM`\ 既可以使用SQL语句\ ``CHECK TABLE, REPAIR TABLE, OPTIMIZE TABLE, ANALYZE TABLE``\ 也可以通过\ ``myisamchk``\ 命令。
+``myisamchk``\ 命令
+--------------------
+*   ``外部锁``\：如果MySQL Server禁用了外部锁（默认设定），使用\ ``myisamchk``\
+    命令是不安全的。如果mysqld与myisamchk在同一张表上工作，会引起此表的数据损坏\
+    。此时最安全的做法是停止MySQL Server服务再执行\ ``myisamchk``\ 命令；如果可\
+    以确定mysqld没有在某张表上工作，可以先运行命令\ ``mysqladmin flush-tables``\
+    ，再运行\ ``myisamchk``\ 命令。
+*   如果外部锁（external lock）被mysqld开启，可以在任何时候运行\ ``myisamchk``\
+    以检查数据表。（为什么？锁）
+*   通常情况下\ ``myisamchk``\ 命令通过逐行复制数据文件\ ``.MYD``\ 来进行检查和\
+    修复工作，当修复结束时，会删除原来的MYD文件，将新的文件命名为原文件。
+
+检查错误
+^^^^^^^^^^
+下列选项可用于检查\ ``MyISAM``\ 表的错误
+
+*   ``myisamchk tbl_name``  可以发现99.99%的问题，如果仅仅是数据文件的错误则无\
+    法发现。\ ``-s (slient)``\ 不输入正常信息
+
+*   ``myisamchk -m  tbl_name``  首先会检查\ *索引条目*\ ；然后会计算并核对每行中
+    的KEY的\ *校验和*
+
+*   ``myisamchk -e tbl_name``   (-e "extened check")会彻底的检查所有数据。对于\
+    数据比较多的表会消耗较长时间。当发现第一错误后将会终止。选项\ ``-v``\ 将会\
+    显示更加详细的信息，且会显示最多20个错误才终止检查。
+*   ``myisamchk -e -i tbl_name``    与上面的命令类似，选项\ ``-i``\ 会显示一些\
+    额外的统计信息。
+
+修复\ ``MyISAM``\ 表
+^^^^^^^^^^^^^^^^^^^^
+.. warning::
+
+    **进行任何修复操作前必须进行备份! 如果使用了主从复制，请先停止！**
+
+常见的错误包括：
+*   *tbl_name.frm*\ 被锁无法修改
+*   找不到文件\ *tbl_name.MYI*
+*   无法预期的文件结尾
+*   记录文件损坏
+*   处理表时发生错误\ *nnn*
+
+通过命令\ ``perror nnn``\ 可以获取详细的错误描述：
+
+.. sourcecode:: bash
+
+    perror 132 134 135 136
+    # OS error code 132:  Operation not possible due to RF-kill
+    # MySQL error code 132: Old database file
+    # MySQL error code 134: Record was already deleted (or record file crashed)
+    # MySQL error code 135: No more room in record file
+    # MySQL error code 136: No more room in index file
+
+错误135(*No more room in record file*)和(*No more room in index file*)可以使用\
+``ALTER TABLE``\ 来增大表选项中的\ ``MAX_ROWS``\ 和\ ``AVG_ROW_LENGTH``\ 的值来\
+修复：
+
+.. sourcecode:: sql
+
+    ALTER TABLE tbl_name MAX_ROWS=100000 AVG_ROW_LENGTH=10000;
+
+通过\ ``SHOW CREATE TABLE``\ 可以查看表的相关选项值。
+
+对于其它一些错误（非135/136）需要使用\ ``myisamchk``\ 进一步修复。修复一般分为\
+四步：（\ **在进行修复前必须先将MySQL Server关闭。**\ ）
+
+1.  **检查表**
+
+    运行命令\ ``myisamchk [-e | others options] *.MYI``\ 选项\ *-s*\ 可以减少不\
+    必要的输出。使用 \ *--update-state*\ 选项，\ ``myisamchk``\ 会对检查过的表\
+    进行标记。
+
+    对于一般错误进入第二步进行修复；对于无法预知的错误（如\ *内存溢出*\ ，\
+    *myisamchk崩溃*\ ）跳至第三步进行修复。
+2.  **简单安全的修复**
+
+    *   首先通过命令\ ``myisamchk -r -q tbl_name``\ 尝试快速修复。这种方法将尝\
+        试修复索引文件而不处理数据文件。如果修复失败，则进行下一步；
+
+    *   备份数据文件
+    *   使用\ ``myisamchk -r tbl_name``\ 进行修复，此操作将从数据文件中删除不正\
+        的数据，并重建索引文件。
+
+    *   如果上一步失败，使用\ ``myisamchk --safe-recover tbl_name``\ 进行修复。\
+        安全修复模式会使用一种比较老的方法来修复。
+
+    如果操作过程中出现\ *内存溢出，myisamchk崩溃*\ 请执行第三步进行恢复。
+3.  **困难的修复**
+
+    如果走到这一步通常是：
+
+    *   索引文件的最初16KB损坏或包含不正确的信息
+    *   如果索引文件丢失，则必须新建一个索引文件：
+        *   将数据文件备份至安全位置
+        *   使用表描述文件创建新的数据文件和索引文件
+            
+            .. sourcecode:: sql
+
+                USE db_name;
+                SET autocommit=1;
+                TRUNCATE TABLE tbl_name;
+                quit;
+
+        *   将数据文件复制回来一份，覆盖新的数据文件
+    *   回到第二步执行\ ``myisamchk -r -q``\ 。另外也可用\ ``REPAIR TABLE
+        tbl_name USE_FRM``\ 来进行修复。
+4.  如果需要执行此步进行修复，说明表描述文件(.FRM)已经损坏，这种情况几乎不会发\
+    生，因为表描述文件在数据表建立好后就不会再改变。修复方法如下：
+
+    *   从备份中恢复表描述文件（.FRM）返回执行第三步进行修复；如果索引文件也可\
+        从备份中恢复，返回第二步进行修复；
+
+    *   如果没有备份但是知道相应的表是如果创建的，可以在其它库中建立一个相同的\
+        表，然后将其.frm, .MYI文件复制一份与数据文件.MYD组合成完整的表，然后回\
+        至第二步进行修复操作，尝试重建索引文件。
+
+    *   如果啥也没有，那就废了。
+
+``myisamchk``\ 还有一些选项可以加速修复操作：\ ``sort-buffer-size,
+key-buffer-size``\ 。
+
+MyISAM表的优化
+^^^^^^^^^^^^^^
+使用\ ``OPTIMIZE TABLE``\ 也可以进行\ ``MyISAM``\ 的优化操作，通常包含\ *表修复,
+KEY分析，索引树排序*\ 等操作，经过优化可以提高KEY的查找速度。
 
 ``myisamchk``\ 命令用于优化的常用选项有：
 
-*   -r | --recover  修复\ ``MyISAM``\ 表中几乎所有的问题（除KEY不唯一外）
-*   -a | --analyze  通过分布分析改善\ ``JOIN``\ 性能。使用join优化器选择最佳的表连接和索引顺序
-*   -S | --sort-index   对索引块排序，优化查找性能，提高用索引搜索表的速度
-*   -R | --sort-records=index_num   应用指定的索引对数据行进行排序，使得数据聚集的更好，提高基于范围（range-based）的\ ``SELECT``\ 和\ ``ORDER BY``\ 操作的速度
+*   ``-r | --recover``  修复\ ``MyISAM``\ 表中几乎所有的问题（除KEY不唯一外），\
+    回收被浪费的空间；
+*   ``-a | --analyze``  通过分布分析改善\ ``JOIN``\ 性能。使用join优化器选择最\
+    佳的表连接和索引顺序
+*   ``-S | --sort-index``   对索引块排序，优化查找性能，提高用索引搜索表的速度
+*   ``-R | --sort-records=index_num``   应用指定的索引对数据行进行排序，使得数\
+    据聚集的更好，提高基于范围（range-based）的\ ``SELECT``\ 和\ ``ORDER BY``\
+    操作的速度
+
+
+MyISAM的周期维护
+-----------------
+优化\ `MyISAM`\ 既可以使用SQL语句\ ``CHECK TABLE, REPAIR TABLE, OPTIMIZE TABLE,
+ANALYZE TABLE``\ 也可以通过\ ``myisamchk``\ 命令。
 
 需要注意：执行\ ``myisamchk``\ 命令时，相应的数据表不可以操作。
 
-正常情况下，MySQL的表只需进行很少维护，如果\ ``MyISAM``\ 表更新的大量可变大量的内容（\ `VARCHAR, BLOB, TEXT`\ 类型的字段），或者删除的大量的数据，这时可以通过\ ``OPTIMIZE TABLE``\ 进行优化。
+正常情况下，MySQL的表只需进行很少维护，如果\ ``MyISAM``\ 表更新的大量可变大量的\
+内容（\ ``VARCHAR, BLOB, TEXT``\ 类型的字段），或者删除的大量的数据，这时可以通\
+过\ ``OPTIMIZE TABLE``\ 进行优化。
 
 MySQL Server自动维护
 ^^^^^^^^^^^^^^^^^^^^
-如果MySQL Server的配置文件中开启了选项\ ``--myisam-recover-options=[options,...]``\ ，此选项有五个值可选（并可以组合使用）：\ ``OFF, DEFAULT, BACKUP, FORCE, QUICK``\ 。选项值为空等同于\ ``DEFAULT``\ ，而选项值为：""等同于\ ``OFF``\ 。开启此功能后，mysqld每次打开\ `MyISAM`\ 表时，都会检查表\ *是否被标记为损坏或者非正常关闭*\ ，如果是，mysqld将会检查并修复表。从文档表述来看，开启此功能对MySQL Server的性能有一定影响。
+如果MySQL Server的配置文件中开启了选项\
+``--myisam-recover-options=[options,...]``\ ，此选项有五个值可选（并可以组合使\
+用）：\ ``OFF, DEFAULT, BACKUP, FORCE, QUICK``\ 。选项值为空等同于\ ``DEFAULT``\
+，而选项值为：""等同于\ ``OFF``\ 。开启此功能后，mysqld每次打开\ `MyISAM`\ 表时\
+，都会检查表\ *是否被标记为损坏或者非正常关闭*\ ，如果是，mysqld将会检查并修复\
+表。从文档表述来看，开启此功能对MySQL Server的性能有一定影响。
 
 +---------+--------------------------------------------------------------------+
 | Option  |                         Descripton                                 |
@@ -387,6 +527,14 @@ crontab计划任务
 
     35 0 * * 0 /path/to/myisamchk --fast --silent /path/to/datadir/*/*.MYI
 
+也可以通过执行SQL语句\ ``OPTIMIZE TABLE``\ 来优化。
+
+小结
+----
+*   对\ ``MyISAM``\ 进行定期维护以降低故障发生的可能性。
+*   修复前关停MySQL Server，备份数据。
+*   可以使用SQL语句\ ``OPTIMIZE, CHECK, REPAIR, ANALYZE TABLE``\ 或者\
+    ``myisamchk``\ 进行维护和故障修复。
 
 
 参考资料

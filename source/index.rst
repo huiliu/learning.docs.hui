@@ -29,6 +29,7 @@ Welcome to Robin's Blog
     nginx_directive
     mediawiki
     docker
+    mail
 
 内核
 ^^^^^
@@ -93,6 +94,8 @@ Welcome to Robin's Blog
     sscanf
     unicode
     comm_pipe
+    libpcap
+    libevent
 
 Python
 ^^^^^^

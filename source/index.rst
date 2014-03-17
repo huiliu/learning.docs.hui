@@ -30,6 +30,7 @@ Welcome to Robin's Blog
     mediawiki
     docker
     mail
+    lvm
 
 内核
 ^^^^^

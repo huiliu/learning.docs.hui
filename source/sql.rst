@@ -1,14 +1,33 @@
 Learning SQL
 *************
-学习SQL的一些基本语法。
+学习SQL的一些基本语法。\ [#]_
 
 一些基本术语：\ **实体**\ ，\ **列**\ ，\ **行**\ ，\ **表**\ ，\ **结果集**\
-，\ **主键**\ ，\ **外键**\ ，\ **事务**\ ，\ **索引**\ ，\ **视图**\ ，\ **约\
+，\ **主键**\ ，\ **外键**\ ，\ **事务**\ ，\ **索引**\ ，\ **视图**\ ，\ **约
 束**\ 。
 
-SQL语言可以分为几个模块：\ **SQL方案语句**\ ，用于定义存储于数据库中的数据结\
-构；\ **SQL数据语句**\ ，用于操作数据库中的数据；\ **SQL事务语句**\ ，用于开\
-始、结束或回滚事务。
+SQL语言可以分为几个模块：
+
+1.  **SQL定义语句(Data Definition Language)**\ ，用于定义存储于数据库中的数据结\
+    构；
+
+    *   ``CREATE``
+    *   ``DROP``
+    *   ``ALTER``
+
+2.  **SQL操作数据语句(Data Manipulation Language)**\ ，用于操作数据库中的数据；
+
+    *   ``SELECT``
+    *   ``INSERT``
+    *   ``UPDATE``
+    *   ``DELETE``
+
+3.  **SQL事务语句(Data Control Language)**\ ，用于开始、结束或回滚事务。
+    
+    *   ``COMMIT``
+    *   ``ROLLBACK``
+    *   ``GRANT``
+    *   ``REVOKE``
 
 一定要注意，不同的数据库软件使用的SQL语法略有不同，如果某条语句提示语法错误请\
 查找相应手册，确认语法符合要求。
@@ -35,6 +54,13 @@ CREATE TABLE
 
 ALTER TABLE
 -------------
+SQL格式：
+
+.. sourcecode:: sql
+
+    ALTER TABLE tbl_name ADD (col_name1, col_name2);
+    ALTER TABLE tbl_name DROP COLUMN col_name;
+
 *   调整列的数据类型（在MariaDB 5.5.32上测试）\ [#]_
     
     .. sourcecode:: sql
@@ -46,6 +72,12 @@ ALTER TABLE
     .. sourcecode:: sql
 
         ALTER TABLE tbl_name ADD PRIMARY KEY (index_col_name)
+
+*   删除列
+
+    .. sourcecode:: sql
+
+        ALTER TABLE tbl_name DROP COLUMN col_name;
 
 
 条件过滤-WHERE子句
@@ -149,7 +181,7 @@ ALTER TABLE
 
 * **分组**\ 即针对某一特征的不同值进行分组，分块。
 * **聚集**\ 其实是对分组后，每组中的数据进行统计分析。SQL只提供了一些简单的统计
-  函数。如\ MAX_\ ，\ MIN_ \ ，SUM_ \ ，COUNT_\ 等。
+  函数。如\ MAX_\ ，\ MIN_ \ ，SUM_ \ ，COUNT_\ ，AVG_\ 等。
 
 .. _MAX:
 
@@ -158,6 +190,47 @@ ALTER TABLE
 .. _SUM:
 
 .. _COUNT:
+
+.. _AVG:
+
+``GROUP BY``
+-------------
+SQL：
+
+.. sourcecode:: sql
+
+    SELECT * FROM tbl_name WHERE conditions GROUP BY col_names;
+
+**SQL的执行顺序：**\ （不同软件实现可能不同）
+
+|   ``FROM`` -> ``WHERE`` -> ``GROUP BY`` -> ``SELECT``
+
+关于\ ``GROUP BY``\ 需要注意的：\ *``SELECT``\ 字句中只能包含常数、聚合函数、\
+``GROUP BY``\ 子句中的列（聚合键）*
+
+思考：
+
+.. sourcecode:: sql
+
+    -- 执行一下下面的语句，看看结果如何？分析一下？
+    SELECT col_name AS COL_NAME, COUNT(*) FROM tbl_name GROUP BY COL_NAME;
+
+``HAVING``
+-----------
+``HAVING``\ 子句类似于\ ``WHERE``\ ，为指定条件的语句。但是\ ``HAVING``\ 的条件\
+主要是针对聚合结果进行判断。所以，\ ``HAVING``\ 子句的条件可以是什么？不能是什\
+么？
+
+SQL格式：
+
+.. sourcecode:: sql
+
+    SELECT * FROM tbl_name WHERE conditions GROUP BY col_names HAVING conditions;
+    
+思考：
+
+*   包含\ ``HAVING``\ 子句的SQL执行顺序是什么样的？
+*   \ **什么时候用\ ``WHERE``\ ？什么时候用\ ``HAVING``\ 呢？**
 
 子查询
 ======
@@ -287,4 +360,5 @@ SQL Server使用表锁，页锁和行锁，Oracle只有行锁，MySQL取决于�
 
 参考资料
 ==========
+.. [#]  Mick, 孙淼，罗勇译；《SQL基础教程》；人民邮电出版社
 .. [#]  http://dev.mysql.com/doc/refman/5.5/en/alter-table.html

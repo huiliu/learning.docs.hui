@@ -154,6 +154,28 @@ enumerate函数和zip函数
 ``time.clock()``\ 在Unix上返回当前CPU时间，单位为秒的浮点数，其精度依赖于同名C\
 函数；Windows上返回与第一次调用此函数的时间差。
 
+获得系统配置信息
+================
+``sysconfig``\ 可以用来获取当前python的配置信息。\ ::
+
+    >>> sysconfig.get_config_var('LIBDIR')
+    '/usr/local/lib'
+
+如果要获得系统变量信息呢？比如一个进程可以打开的最大文件数（\ ``_SC_OPEN_MAX``\
+），节拍数（\ ``_SC_CLK_TCK``\）。模块\ ``os``\ 中的函数\ ``sysconf``\ 可以完成
+相应的任务：\ ::
+
+    >>> import os
+    >>> os.sysconf('SC_CLK_TCK')
+    100
+    # 需要注意的是：不需要变量前的下划线
+
+    # 另外还可以这样哦
+    >>> os.sysconf_names['SC_CLK_TCK']
+    2
+    >>> os.sysconf(2)
+    100
+
 
 参考资料
 ==========

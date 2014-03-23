@@ -52,6 +52,7 @@ Welcome to Robin's Blog
     mysql_privileges
     mysql_backup
     mongodb
+    mysql_logs
 
 系统安全
 ^^^^^^^^^^
@@ -78,6 +79,7 @@ Welcome to Robin's Blog
     puppet
     foreman
     nagios
+    proc
 
 持续集成CI
 ^^^^^^^^^^^
@@ -108,6 +110,15 @@ Python
     pymysql
     python_network
     code_evolution
+
+生活
+^^^^^
+.. toctree::
+    :maxdepth: 1
+
+    children
+    song
+    holdteam
 
 
 Indices and tables

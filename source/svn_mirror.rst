@@ -3,9 +3,9 @@ SVN仓库安全之镜像备份
 
 软件需求
 =========
-本文经过在CentOS5.5_X86上实验通过，相关软件有：
+本文经过在CentOS 5.5_X86上实验通过，相关软件有：
 
-*   操作系统：CentOS5.5 X86
+*   操作系统：CentOS 5.5 X86
 *   mod_authz_ldap-0.26-9.el5
 *   mod_dav_svn-1.6.15-0.1
 *   subversion-1.6.15-0.1
@@ -54,7 +54,7 @@ SVN仓库安全之镜像备份
 
 .. todo::
 
-    如果快速建立SVN镜像仓库
+    如何快速建立SVN镜像仓库
 
 建立主SVN仓库的镜像(Mirror)
 ============================
@@ -88,8 +88,9 @@ SVN仓库安全之镜像备份
 
         svnsync sync http://devhome/backup/hello --non-interactive --no-auth-cache --username usersync --password passwd
 
-安装好上面的hook后，当用户向http://devhome/repos/hello提交数据，当前提交会自动\
-同步到http://devhome/backup/hello
+安装好上面的hook后，当用户向\ *http://devhome/repos/hello*\ 提交数据，当前提交\
+会自动同步到\ *http://devhome/backup/hello*\ 。如果SVN的访问需要授权，则必须提\
+供用户名和密码，且保证正确（小心有些系统设置了密码的有效期）
 
 案例
 ======
@@ -98,11 +99,26 @@ SVN仓库安全之镜像备份
 
 切换至镜像仓库
 ================
+尽量不要向镜像仓库提交数据，不得不使用镜像仓库时，先对镜像仓库进行一个完整备份，
+以备再次建立镜像备份。因为镜像仓库本来就是设计为只读仓库的，从镜像恢复主仓库可\
+能会出现各种意外，后续将介绍一些实际经验。
+
+将镜像仓库作为主仓库接收用户提交数据时，还需要将镜像仓库的\ ``UUID``\ 修改为主\
+仓库的\ ``UUID``\ 。
+
+.. sourcecode:: bash
+
+    # UUID文件位于文件repos_name/db/uuid中
+    REPOS_PATH=/repos
+    for dir in `ls $REPOS_PATH`
+    do
+        file="${REPOS_PATH}/${dir}/db/uuid"
+        cat $file
+    done
 
 
-
-导入数据至主仓库
-=================
+从镜像仓库恢复主仓库
+====================
 由于故障时将镜像仓库用作主仓库接受客户端的数据提交，所以当修复的主仓库重新上线\
 时，镜像仓库的数据比主仓库的更新一些，所以必须将提交到镜像仓库的数据重新导回主\
 仓库才能重新恢复主－镜像备份功能。
@@ -208,7 +224,7 @@ SVN仓库安全之镜像备份
 
             # 删除SVN仓库中的锁
             svnadmin lslock /repos/hello > helloLocks
-            for f in `grep Path hellolocks |awk '{print $2}'`
+            for f in `grep Path hellolocks | awk '{print $2}'`
             do
                 svnadmin rmlocks /repo/rhsrc $f
             done

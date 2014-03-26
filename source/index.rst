@@ -21,8 +21,6 @@ Welcome to Robin's Blog
     gentoo
     freebsd
     datamining
-    svn
-    svn_mirror
     rpm
     vim
     php
@@ -87,6 +85,8 @@ Welcome to Robin's Blog
     :maxdepth: 1
     
     jenkins
+    svn
+    svn_mirror
 
 
 编程

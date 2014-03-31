@@ -51,6 +51,8 @@ Welcome to Robin's Blog
     mysql_backup
     mongodb
     mysql_logs
+    mysql_optimize
+    mysql_key
 
 系统安全
 ^^^^^^^^^^

@@ -68,6 +68,15 @@ SVN Q/A
     端可以正常获取SVN，但提交时会提示\ **../db/txn-current end of file**\ 之类\
     的错误。只需要向其中输入一个换行符(``echo > db/txn-current``)就能解决此问题。
 
+6.  命令\ ``svn info``\ 可以正常执行，但是执行\ ``svn up``\ 时得到错误：\
+    ``svn: XML data was not well-formed``
+
+    subversion 1.8时：\ ``svn info``\ 可以正常运行，\ ``svn up``\ 得到错误：\
+    ``Updating '.':
+    svn: E175004: The PROPFIND response did not include the requested properties``
+
+    原因：在OS X上使用svn时会提示key的解密，奇怪的行为。（用户由管理员降为普通\
+    用户，删除过\ *.subversion*\ ，移除过\ *.ssh*\ 均未奏效）
 
 参数资料
 =========

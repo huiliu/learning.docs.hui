@@ -51,6 +51,8 @@ Welcome to Robin's Blog
     mysql_backup
     mongodb
     mysql_logs
+    mysql_optimize
+    mysql_key
 
 系统安全
 ^^^^^^^^^^
@@ -119,6 +121,7 @@ Python
     children
     song
     holdteam
+    live_finace
 
 
 Indices and tables

@@ -10,10 +10,11 @@ mailbox和maildir
 
 Q&A
 =====
-1. 利用\ **postfixadmin**\ 建立用户，同时会创建相关目录。但是默认情形下，\
-   **postfixadmin**\ 创建的目录为"`$virtual_mailbox_base`/`virtual_mailbox_maps`\
-   /**username\@domain**"。如果邮件服务器上有多个域名，这样则不便于管理，最好是:\
-   "`$virtual_mailbox_base`/`$virtual_mailbox_maps`/**domain/user/**"的形式。
+1.  利用\ **postfixadmin**\ 建立用户，同时会创建相关目录。但是默认情形下，\
+    **postfixadmin**\ 创建的目录为"`$virtual_mailbox_base`/`virtual_mailbox_maps`\
+    /**username\@domain**"。如果邮件服务器上有多个域名，这样则不便于管理，最好是:\
+    "`$virtual_mailbox_base`/`$virtual_mailbox_maps`/**domain/user/**"的形式。
+
     1. 修改\ **postfixadmin**\ 的配置文件("`config.inc.php`")：
     2. 将\ `$CONF['domain_path']`\ 设定为"**YES**"；
     3. 将\ `$CONF['domain_in_mailbox']`\ 设定为"**YES**".

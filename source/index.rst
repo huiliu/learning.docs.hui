@@ -30,6 +30,8 @@ Welcome to Robin's Blog
     mail
     lvm
     samba_ads
+    samba_basic
+    disk_quota
 
 内核
 ^^^^^

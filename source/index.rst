@@ -29,6 +29,7 @@ Welcome to Robin's Blog
     docker
     mail
     lvm
+    samba_ads
 
 内核
 ^^^^^

@@ -29,6 +29,9 @@ Welcome to Robin's Blog
     docker
     mail
     lvm
+    samba_ads
+    samba_basic
+    disk_quota
 
 内核
 ^^^^^

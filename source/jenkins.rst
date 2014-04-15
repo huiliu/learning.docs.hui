@@ -16,29 +16,34 @@
             Library/
             ProjectSettings/
             StreamingAssets/
-                            Temp_Data/
-                            Tex/
+                Temp_Data/
+                Tex/
             StreamingIOS/
+            Tools/
+                bin/
+                etc/
+                ...
             WebPlayer/
 
 其中：
 
-*   “\ **Assets**\ ”目录存放着所有源代码和原始资源
-*   “\ **Assets/Editor**\ ”目录存放着命令命令编译脚本\ “\ **CommandCompiler.cs**\ ”
-*   “\ **Bundles**\ ”用于存放Web版客户端编译后资源 （可以修改编译代码调整）
-*   “\ **StreamingAssets**\ ”用于存放Android版客户端编译后资源（可以修改编译代码调整）
-*   “\ **StreamingIOS**\ ”用于存放iOS客户端编译后资源（可以修改编译代码调整）
-*   “\ **WebPlayer**\ ”基本废弃
+*   “\ ``Assets``\ ”目录存放着所有源代码和原始资源
+*   “\ ``Assets/Editor``\ ”目录存放着命令命令编译脚本\ “\ ``CommandCompiler.cs``\ ”
+*   “\ ``Bundles``\ ”用于存放Web版客户端编译后资源 （可以在编译代码中调整）
+*   “\ ``StreamingAssets``\ ”用于存放Android版客户端编译后资源（可以编译代码中修改调整）
+*   “\ ``StreamingIOS``\ ”用于存放iOS客户端编译后资源（可以在编译代码中修改调整）
+*   "\ ``Tools``\ 存放命令行编译工具
+*   “\ ``WebPlayer``\ ”基本废弃
 
 
 资源的链接
 ---------------
-当前项目的设定中，将编译后的资源根据不同的平台分别存放在\ **Bundles, StreamingAssets, StreamingIOS**\ 这三个目录。
-而根据\ ``Unity3D``\ 的特殊目录要求，资源应该保存在\ ``Assets/StreamingAssets``\ 中，所以在编译输出二进制包和\ `xcode`\ 项目文件时，需要将对应编译后的资源文件连接至此。如：当编译iOS的xcode项目文件时，需要将\ **Assets/StreamingIOS**\ 目录链接到\ **Assets/StreamingAssets**\ ；编译Android客户端时，需要将\ **StreamingAssets**\ 链接到\ **Assets/StreamingAssets**\ 等。
+当前项目的设定中，将编译后的资源根据不同的平台分别存放在\ ``Bundles, StreamingAssets, StreamingIOS``\ 这三个目录。
+而根据\ ``Unity3D``\ 的特殊目录要求，资源应该保存在\ ``Assets/StreamingAssets``\ 中，所以在编译输出二进制包和\ `xcode`\ 项目文件时，需要将对应编译后的资源文件连接至此。如：当编译iOS的xcode项目文件时，需要将\ ``Assets/StreamingIOS``\ 目录链接到\ ``Assets/StreamingAssets``\ ；编译Android客户端时，需要将\ ``StreamingAssets``\ 链接到\ ``Assets/StreamingAssets``\ 等。
 
-部分贴图资源仅在目录\ **StreamingAssets/Tex**\ 下维护，所以当编译Web客户端和iOS客户端时需要将此两个目录拷贝到\ **Bundles**\ 或\ **StreamingIOS**\
+部分贴图资源仅在目录\ ``StreamingAssets/Tex``\ 下维护，所以当编译Web客户端和iOS客户端时需要将此两个目录拷贝到\ ``Bundles``\ 或\ ``StreamingIOS``\
 
-由于\ **Bundles**\ ，\ **StreamingAssets**\ 和\ **StreamingIOS**\ 每次SVN更新可能有新的资源加入，也可能有资源被移除，所以在每次编译前需要将子目录都清空，进行SVN更新时将这些目录排除。
+由于\ ``Bundles``\ ，\ ``StreamingAssets``\ 和\ ``StreamingIOS``\ 每次SVN更新可能有新的资源加入，也可能有资源被移除，所以在每次编译前需要将子目录都清空，进行SVN更新时将这些目录排除。
 
 
 软件需求
@@ -46,7 +51,7 @@
 
 开发及编译工具:
 
-1.  服务端使用\ **gcc**\ 和\ **automake**\ 进行编译
+1.  服务端使用\ ``gcc``\ 和\ ``automake``\ 进行编译
 2.  Unity3D (>=4.1.2f)
 3.  Android SDK (API Level >= 10)
 4.  Xcode (>=4.6)

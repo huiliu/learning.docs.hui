@@ -303,6 +303,20 @@ Linux下浏览，挂载Samba共享文件
 
     注意"*/etc/samba/smbcred*"的权限应该为600
 
+常见问题
+==========
+1.  登陆时提示\ ``session setup failed: NT_STATUS_LOGON_FAILURE``
+
+    提示帐户不存在。
+
+    **原因：**\ 登陆使用的用户在系统中存在，但是没有使用命令\ ``smbpasswd -a
+    name``\ 将用户加入到samba中。
+
+2.  使用命令\ ``smbclient //host/dir -U user``\ 登陆时出现错误\
+    ``tree connect failed: NT_STATUS_BAD_NETWORK_NAME``\ 。
+
+    **原因：**\ 连接的目录\ ``dir``\ 不正确，不存在。
+
 参考资料
 ========
 .. [#man]   `smb.conf(5) <http://www.samba.org/samba/docs/man/manpages-3/smb.conf.5.html>`_

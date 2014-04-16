@@ -139,13 +139,101 @@ MIB的信息可以通过\ `oid-info`_\ 查看。接下假定你有一个正常�
 Export and Import
 ==================
 
+
+报警通知
+========
+
+邮件报警
+---------
+
+
+自定义报警
+----------
+``zabbix``\ 提供了多种报警方式，但是还是满足不了要求怎么办？使用脚本自定义报警。
+[#alert]_\ 首先需要在\ ``zabbix server``\ 的配置文件\
+``/etc/zabbix/zabbix_server.conf``\ 中通过\ ``AlertScriptsPath``\ 指定自定义命\
+令所在的文件夹，其默认值为：\ ``/usr/local/share/zabbix/alertscripts``\ （依赖\
+于编译时的\ ``datadir``\ 设定值）。添加自定义报警步骤如下：
+
+``zabbix``\ 调用自定义报警脚本时会向其传递三个参数：
+*   第一个为接收者
+*   第二个为主题
+*   第三个消息内容
+
+.. sourcecode:: bash
+
+    #!/bin/bash
+     
+    to=$1
+    subject=$2
+    body=$3
+     
+    cat <<EOF | mail -s "$subject" "$to"
+    $body
+    EOF
+
+在脚本中可以充分利用这三个参数。下面是利用IP Message进行告警的python脚本。\ ::
+
+    #!/bin/env python
+    # -*- coding: utf-8 -*-
+
+    # 关于ip messager的协议，请百度
+    # 手动执行方式：
+    #   ipmsg 10.1.0.1 subject 'msg'
+    
+    import socket
+    import sys
+    
+    def ipmessager(dest, msg):
+        """发送消息"""
+    
+        header = '1:0:哨兵:瞭望塔:32:'
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM);
+        for ip in dest:
+            msg = header + msg
+            s.sendto(msg.decode('utf-8').encode('gbk'), (ip, 2425))
+    
+    if __name__ == '__main__':
+        if len(sys.argv) != 4:
+            sys.exit("usage:\n\t%s <ip> <subject> <msg>" % sys.argv[0])
+        to = sys.argv[1].split(',')
+        subject = sys.argv[2]
+        msg = '报告！\n%s' % sys.argv[3]
+        ipmessager(to, msg)
+
+按下面的步骤添加自定义报警：
+
+1.  进行报警类型设置：\ ``'Administration' → 'Media types'``
+2.  点击\ ``'Create media type'``\ ``Type``\ 选择\ ``Script``\ ，并填写好\
+    ``Name``\ 和\ ``Script name``\ （不包括路径）
+3.  为用户添加报警设置。对于当前用户，点击右上角\ ``profile``\ 设置\ ``Media``\
+    添加新的报警。\ ``Send to``\ 设定为接收者的IP。
+
+
+没有接收到报警消息
+^^^^^^^^^^^^^^^^^^
+如果没有收到报警消息，如下图所示，最右侧的一个红色数字\ ``1``\ 即说明有一个报警\
+没有送达目的地。
+
+.. image:: images/zabbix_alert.png
+
+点击查看报警的详细信息，会看到详细的信息，如：
+
+.. image:: images/zabbix_alert_failed.png
+
+由上面可以发现是\ ``zabbix``\ 调用脚本的路径不正确。而实际上我已经在\
+``zabbix_server.conf``\ 指定了\ ``AlertScriptsPath=/usr/local/bin``\ 但是仍然不\
+行。进而发现一个疑似BUG：\ **将AlertScriptsPath是配置文件的第一个有效配置时，\
+zabbix_server居然是使用的默认脚本路径，而将其移到配置文件最后就工作正常了。**
+
+
 安装中可能的问题
 ===================
 
 Log File Monitoring时ZBX_NOTSUPPORT错误
 ---------------------------------------
-配置日志文件监控时一直出错，经过在Zabbix Forums上的提醒\ [#r1]_\ ，仔细查看了agent\
-的调试日志，在其中发现：
+配置日志文件监控时一直出错，经过在Zabbix Forums上的提醒\ [#r1]_\ ，仔细查看了\
+agent的调试日志，在其中发现：
 
 .. sourcecode:: text
 
@@ -253,20 +341,21 @@ Log File Monitoring时ZBX_NOTSUPPORT错误
 通过上面的日志分析，可以发现，server监视agent上的日志文件，需要agent进程可以读\
 取相应的文件，否则会出错。关于监控日志的详细文档见Zabbix Manual [#r2]_\ [#r3]_
 
+.. todo::
+
+    * 如何在agent上可以查询自身数据, 命令\ ``zabbix_agentd``\ 可以打印zabbix agent的\
+      数据
+    
+    .. sourcecode:: bash
+    
+        zabbix_agentd -p
+    
+    * 使用IP/域名配置Server，agent
+
+
 参考资料
 =========
 .. [#r1] https://www.zabbix.com/forum/showthread.php?t=23033
 .. [#r2] https://www.zabbix.com/documentation/2.0/manual/config/items/itemtypes/log_items
 .. [#r3] https://www.zabbix.com/documentation/2.0/manual/config/items/itemtypes/zabbix_agent#supported_item_keys
-
-
-TODO List
-=========
-* 如何在agent上可以查询自身数据, 命令\ ``zabbix_agentd``\ 可以打印zabbix agent的\
-  数据
-
-.. sourcecode:: bash
-
-    zabbix_agentd -p
-
-* 使用IP/域名配置Server，agent
+.. [#alert] `Custom alertscripts <https://www.zabbix.com/documentation/2.2/manual/config/notifications/media/script>`_

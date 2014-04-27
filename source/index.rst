@@ -32,6 +32,8 @@ Welcome to Robin's Blog
     samba_ads
     samba_basic
     disk_quota
+    yslow
+    http_header
 
 内核
 ^^^^^
@@ -40,6 +42,7 @@ Welcome to Robin's Blog
 
     kernel
     lsp01
+    epoll_man
 
 数据库
 ^^^^^^
@@ -115,6 +118,7 @@ Python
     pymysql
     python_network
     code_evolution
+    python_var
 
 生活
 ^^^^^

@@ -639,16 +639,49 @@ HTTP请求要消耗相当的资源，因为发起一个HTTP请求最终得到一
 
 减少Cookie大小
 ===============
+标签：cookie
 
+HTTP cookies有着各种用途，如用户的认证和定制。cookies的内容通过HTTP的头部在WEB服务器和浏览器之间进行交换。重要的是尽可能的减小cookies的大小，以降低它对用户响应时间的影响。
+
+更多的信息请查看Tenni Theurer和Patty Chi撰写的“\ `当cookie崩溃时`_\ ”，其主要观点为：
+
+*   删除非必需的cookies
+*   保持cookies尽可能的小，以降低它对用户响应时间的影响
+*   请在合适的域级别设置cookie，以免影响其它域名
+*   （为cookie）设置一个合适的过期日期，在（cookie）过期前或被删除前，可以提高用户响应时间
+
+.. note::
+
+    减小cookie的大小，以减小HTTP传输数据量，从而提高用户响应时间；为cookie设置一个过期日期，将cookie缓存在客户端。
 
 
 Use Cookie-free Domains for Components
 =======================================
+标签：cookie
+
+当浏览器请求一个静态文件（如图片）时附加上cookie信息，服务器并不会使用这些cookie。因此它们（cookie）只是浪费网络流量而毫无意义。\ **你应该确保在请求静态组件内容时不会携带cookie**\ 。可以创建一个子域用来存放静态内容。
+
+假设你的域名为\ *www.example.org*\ 你可以将静态内容置于\ *static.example.org*\ 下。然而，如果你将cookie设定在顶级域\ *example.org*\ 而不是\ *www.example.org*\
+将导致在请求\ *static.example.org*\ 下的内容时也会携带cookie。在这种情况下，你可能需要使用一个全新的域名来存放静态内容，以保持此域\ *cookie-free*\ 。例如：Yahoo使用yimg.com，YouTube使用\ *ytimg.com*\ ，Amazon使用\ *images-amazon.com*\ 来存放静态内容。
+
+将静态内容存放在一个\ *cookie-free*\ 域的另一优势是：有些代理可以不会缓存包含cookie的请求。如此相关，如果你还没有想好使用\ *example.com*\ 还是\ *www.example.com*\ 作为你的主页，考虑到cookie的影响，如果没有\ *www*\ ，你毫无选择，只能在cookie的作用域中写\ *\*.example.org*\ ，出于（前面所提到的）性能上的因素，最好还是使用\ *www*\ 子域作用主页，并将cookie写在子域上。
+
+.. note::
+
+    竭力减少不必要的数据流量。对于不会使用cookie的静态内容，在请求时杜绝携带cookie。
 
 
 
 Minimize DOM Access
 ====================
+标签：CSS
+
+IE特有的过滤器\ ``AlphaImageLoader``\ 主要是为了修正低版本IE（<7）中真彩色PNG图片的半透明问题。这个过滤器会的问题在于：在图片在下载时，阻止浏览器进行渲染并会冻结浏览器；另外应该这一特性的元素会消耗更多的内存，不仅是图片，因此会引起更大的问题。
+
+最好的做法是完全避免使用\ ``AlphaImageLoader``\ ，使用在IE中工作的很好的PNG8来代替，如果你不得不使用它，请使用\ ``_filter``\ 来避免影响到使用IE7+的用户。
+
+
+
 
 
 
@@ -701,6 +734,21 @@ alt="My Cat" />``\ ,那么你的图片尺寸应该是100x100px，而不是使用
 ===============================
 标签：图片
 
+*favicon.ico*\ 是存放在你的站点顶级路径下的一张图片。它是一个无法避免的evil，因为即使你不关心，浏览器还是会一直请求它，因此最好不要返回一个\ *404 Not Found*\ 的响应。由于（与其它内容）在同一服务器上，所以每次请求\ *favicon.ico*\ 都会附带上cookie。这个图片也会影响到下载顺序。例如在IE中，当请求加载某一个组件时，\ *favicon.ico*\ 会在被请求内容之前下载。
+
+因此为了减轻\ *favicon.ico*\ 带来的不良影响，请确保：
+
+*   *favicon.ico*\ 文件比较小，最小小于1K
+*   通过\ ``Expires``\ 为\ *favicon.ico*\ 设置一个合适的过期时间（如果你想更新favicon.ico，无法重命名）。你可以安全的过期日期设定为几个月之后。你可以能检查当前favicon.ico的修改时间以作出明智的决定。
+
+.. note::
+
+    浏览器在什么情况下会去请求\ *favicon.ico*\ ？
+
+`Imagemagick`_\ 可以帮助你创建更小的favicon图标。
+
+
+.. _Imagemagick:    http://www.imagemagick.org/
 
 
 使页面组件小于25K

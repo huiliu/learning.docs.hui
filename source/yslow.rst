@@ -471,24 +471,24 @@ Apache或IIS的默认ETag配置，你的用户访问页面将比较慢，而且�
 的响应内容可缓存。正如前面讨论过的\ :ref:`添加一个Expires或Cache-Control HTTP头
 <section_expires>`\ ，一些其它规则也可以用于Ajax：
 
-*   `使用Gzip压缩页面内容 <section_gzip>`
-*   `减少DNS查找次数 <section_dns>`
-*   `减小JavaScript代码大小 <section_minify>`
-*   `避免重定向 <section_redirect>`
-*   `配置实体标签 <section_etags>`
+*   :ref:`使用Gzip压缩页面内容 <section_gzip>`
+*   :ref:`减少DNS查找次数 <section_dns>`
+*   :ref:`减小JavaScript代码大小 <section_minify>`
+*   :ref:`避免重定向 <section_redirect>`
+*   :ref:`配置实体标签 <section_etags>`
 
-让我们看一个例子，一个WEB 2.0的电子邮件客户端可能会使用Ajax下载用户的地址来实现
-自动实例。如果用户从上次使用电子邮件Wep APP后没有修改更新地址薄，且Ajax的响应内
-容通过\ ``Expires``\ 或\ ``Cache-Control``\ 进行了缓存，Ajax请求可以直接从缓存中
-读取数据。浏览器必须告知什么时候使用缓存，什么发起一个新的请求。这可以通过在通过
-Ajax请求地址薄时的URL中添加一个时间戳，用于标示地址薄的最后修改时间，例如：\
-*&t=1190241612*\ 。如果地址薄自从上次下载之后没有发生变化，那么（请求时的）时间
-戳应该相同，并且可以从浏览器缓存中读取数据，这样就可以减少额外的HTTP请求操作；如
-果用户修改了她的地址薄，时间戳将保证新的URL不会匹配已缓存的响应内容，浏览器将会
-请求更新地址薄条目。
+让我们看一个例子，一个WEB 2.0的电子邮件客户端可能会使用Ajax下载用户的地址来实现\
+自动实例。如果用户从上次使用电子邮件Wep APP后没有修改更新地址薄，且Ajax的响应内\
+容通过\ ``Expires``\ 或\ ``Cache-Control``\ 进行了缓存，Ajax请求可以直接从缓存\
+中读取数据。浏览器必须告知什么时候使用缓存，什么发起一个新的请求。这可以通过在\
+通过 Ajax请求地址薄时的URL中添加一个时间戳，用于标示地址薄的最后修改时间，例如：
+*&t=1190241612*\ 。如果地址薄自从上次下载之后没有发生变化，那么（请求时的）时间\
+戳应该相同，并且可以从浏览器缓存中读取数据，这样就可以减少额外的HTTP请求操作；\
+如果用户修改了她的地址薄，时间戳将保证新的URL不会匹配已缓存的响应内容，浏览器将\
+会请求更新地址薄条目。
 
-即使你的Ajax响应是动态创建的，并且只适用于单个用户，他们仍然可以被缓存，这样做可
-以使得你的WEB 2.0应用更快。
+即使你的Ajax响应是动态创建的，并且只适用于单个用户，他们仍然可以被缓存，这样做\
+可以使得你的WEB 2.0应用更快。
 
 
 .. note::
@@ -500,11 +500,11 @@ Ajax请求地址薄时的URL中添加一个时间戳，用于标示地址薄的�
 标签：服务器
 
 当用户请求一个页面时， it can take anywhere from 200 to 500ms for the backend
-server to stitch together the HTML page. 在此期间，浏览器一直空闲着等待服务器返
-回数据。在PHP中，你可以使用函数\ ``flush()``\ 输出已加载的缓存。这样可以将已经读
-入的部分HTML数据发送给客户端，这样在后端服务器忙于加载HTML页面的其它部分时，浏览
-器就可以开始下载页面内容。The benefit is mainly seen on busy backends or light
-frontends.
+server to stitch together the HTML page. 在此期间，浏览器一直空闲着等待服务器返\
+回数据。在PHP中，你可以使用函数\ ``flush()``\ 输出已加载的缓存。这样可以将已经\
+读入的部分HTML数据发送给客户端，这样在后端服务器忙于加载HTML页面的其它部分时，\
+浏览器就可以开始下载页面内容。The benefit is mainly seen on busy backends or
+light frontends.
 
 A good place to consider flushing is right after the HEAD because the HTML for
 the head is usually easier to produce and it allows you to include any CSS and
@@ -528,9 +528,9 @@ Ajax使用GET方法请求
 ===================
 标签：服务器
 
-Yahoo邮箱团队发现但使用XMLHttpRequest，浏览器内部通过两步来实现POST方法：先发送
-请求头，再发送数据。因此最好使用GET方法，因为GET方法只发送一个TCP包（除非你有大
-量的cookies）。IE中URL的最大长度为2K，因此如果你发送超过2K的数据时，就不能使用
+Yahoo邮箱团队发现但使用XMLHttpRequest，浏览器内部通过两步来实现POST方法：先发送\
+请求头，再发送数据。因此最好使用GET方法，因为GET方法只发送一个TCP包（除非你有大\
+量的cookies）。IE中URL的最大长度为2K，因此如果你发送超过2K的数据时，就不能使用\
 GET方法了。
 
 有趣的是，POST方法没有像GET方法一样发送任何数据，基于\ `HTTP规范`_\ ，GET方法是\
@@ -539,7 +539,7 @@ GET方法了。
 
 .. note::
 
-    浏览器通过两步完成POST方法，至少发送两个TCP包，而GET方法通常只需发送一个TCP
+    浏览器通过两步完成POST方法，至少发送两个TCP包，而GET方法通常只需发送一个TCP\
     包。（不同浏览器实现是否不同？）
 
     IE中URL最大长度为2K，即GET方法最多可发送2K的数据；那么其它浏览器呢？
@@ -550,31 +550,81 @@ GET方法了。
 
 Post-load Components
 =====================
+标签：内容
 
+仔细审视一下你的页面，问问自己”为了初始渲染页面，哪些东西是绝对必需的？”其它内容
+和组件可以等一等。
 
+JavaScript非常容易分为页面加载前和加载后两类。例如，你有一些用于拖放和动画的
+JavaScript库，那么它们就可以等等再加载，因为拖放页面上的元素只能在页面初始渲染完
+后才能进行。其它可能被暂缓加载的内容包括隐藏内容（需要用户动作才会显示的内容）和
+折叠内容下的图片。
+
+有一些工具可以帮助你实现这些工作：\ `YUI Image Loader`_\ 允许你延迟折叠内容下的
+图片，\ `YUI Get utility`_\ 是一个包含JS和CSS的简单方法。例如，可以打开Firebug的
+Net面板，再加载Yahoo主页看看。
+
+(Post-load Components)与其它WEB开发最佳实践结合可以取得更好的效果。在这种情况下
+，逐步增强的想法告诉我们，如果浏览器支持，JavaScript能够提高用户体验，但是你不得
+不确保页面在没有JavaScript时也能正常工作。在你确认页面可以很好渲染后，你可以使用
+一些post-load组件内容来为页面添加更新花哨的功能，如（元素的）拖放和动画等。
+
+.. note::
+
+    对页面元素建立一个加载优先顺序，逐步加载页面，以期尽快的向用户展示页面而提高
+    用户体验。
+
+.. _YUI Image Loader:   https://developer.yahoo.com/yui/imageloader/
+.. _YUI Get utility:    https://developer.yahoo.com/yui/get/
 
 
 预加载内容
 ===========
-Preload Components
+标签：内容
 
+预加载(preload)看上去与延迟加载(post-load)是相对立的，但事实上它们有着不同的目标
+，通过预加载你能够利用浏览器空闲时间来请求那些你将需要页面组件（如图片，样式表和
+脚本）。当用户访问下一个页面时，这种方式（预加载）使得有大多数组件内容已经缓存在
+客户端，那么用户加载页面时将会更快。
+
+通常预加载被分为下面几种类型：
+
+*   *无条件预加载(unconditional preload)*\ 加载完某个内容后，马上开始获取一些额
+    外的内容组件。例如，可以查看一下google.com如何加载一个精灵(sprite)的？这个精
+    灵图片并不是google.com主页所必须的，但是后续的搜索结果页面需要它。
+
+*   *条件加载(conditional preload)*\ 基于用户动作（的分析）你可以猜想用户接下来
+    将会做什么并对其进行预加载。在search.yahoo.com页面，你可以看到当你在输入框输
+    入内容后，有哪儿额外的组件资源被请求加载了。
+
+*   *期待预加载(anticipated preload)*\ 在进行重新设计前。完成重新设计后，你经常
+    会听到“新站点很酷，但是加载速度比之前的慢”。部分原因是因为在用户访问时，已经
+    缓存有旧站点的数据，但对于访问新站点，客户端并没有缓存。通过在重新设计之前，
+    甚至是开始重新设计后，你可能通过（用户）访问旧站点时浏览器的空闲时，加载一些
+    新站点会使用到的资源（如图片、脚本之类）来消除前面提到的重新设计带来的负面效
+    应。
+
+
+.. note::
+
+    合理预加载——大数据分析，人工智能？
 
 
 减少DOM元素数量
 ===============
 标签：内容
 
-一个复杂的网页意味着需要下载更多的数据，另外JavaScript读取DOM时更慢。例如，当你
+一个复杂的网页意味着需要下载更多的数据，另外JavaScript读取DOM时更慢。例如，当你\
 想增加一个事件处理时需要遍历500和5000个DOM时，两者非常的不同。
 
-存在大量的DOM元素意味着可以通过删除页面中非必需元素加以改进。为了页面布局你是否
-使用过嵌套表格呢？你是否使用更多的\ ``div``\ 标签来改善这个问题呢？这可能是一种
+存在大量的DOM元素意味着可以通过删除页面中非必需元素加以改进。为了页面布局你是否\
+使用过嵌套表格呢？你是否使用更多的\ ``div``\ 标签来改善这个问题呢？这可能是一种\
 更好、（语义上）更加正确的方法改进你的HTML文件。
 
-`YUI CSS工具`_\ 对页面布局有非常大的帮助：文件\ *grids.css*\ 可以帮助你进行页面
-布局；文件\ *fonts.css, reset.css*\ 可以帮助你去掉浏览器的默认格式设置。这让你可
-以重新开始思考你使用的标签（来布局），例如只有当语义上正常，而还是因为需要渲染一
-个新行而使用\ ``div``\ 标签。
+`YUI CSS工具`_\ 对页面布局有非常大的帮助：文件\ *grids.css*\ 可以帮助你进行页面\
+布局；文件\ *fonts.css, reset.css*\ 可以帮助你去掉浏览器的默认格式设置。这让你\
+可以重新开始思考你使用的标签（来布局），例如只有当语义上正常，而还是因为需要渲\
+染一个新行而使用\ ``div``\ 标签。
 
 DOM元素的数目很容易测算，在\ ``Firebug``\ 的命令栏输入：\
 ``document.getElementsByTagName('*').length``\ 就可以得到。
@@ -591,9 +641,9 @@ DOM元素的数目很容易测算，在\ ``Firebug``\ 的命令栏输入：\
 ======================
 标签：内容
 
-通过拆分内容组件，你可以最大化并行下载。确保你使用的域名数没有超过4个，因为DNS查
-找也是有代价的。例如你可以将HTML文件和动态内容存放在域www.example.com中，将静态
-内容拆分到static1.example.com和static2.example.com下。
+通过拆分内容组件，你可以最大化并行下载。确保你使用的域名数没有超过4个，因为DNS\
+查找也是有代价的。例如你可以将HTML文件和动态内容存放在域www.example.com中，将静\
+态内容拆分到static1.example.com和static2.example.com下。
 
 更多的信息请查看由Tenni Theurer和Patty Chi撰写的\ `通过拼车道最大化并行下载
 <http://yuiblog.com/blog/2007/04/11/performance-research-part-4/>`_\ 。
@@ -604,7 +654,7 @@ DOM元素的数目很容易测算，在\ ``Firebug``\ 的命令栏输入：\
 =================
 标签：内容
 
-框架（Iframes）允许HTML文档插入到其父文档中。只有理解了框架是如何工作的，才能更
+框架（Iframes）允许HTML文档插入到其父文档中。只有理解了框架是如何工作的，才能更\
 加有效的利用它。
 
 <iframe> pros:
@@ -624,13 +674,13 @@ No 404s
 ========
 标签：内容
 
-HTTP请求要消耗相当的资源，因为发起一个HTTP请求最终得到一个无意义的响应是完全没有
-必要的，它不会给用户带来任何好处，且降低用户体验。
+HTTP请求要消耗相当的资源，因为发起一个HTTP请求最终得到一个无意义的响应是完全没\
+有必要的，它不会给用户带来任何好处，且降低用户体验。
 
-有些站点提供在404s提供一个提示信息”你的意思是X？“，这对用户有很大的帮助，但是会
-浪费服务端资源（如数据库等）。特别糟糕的是当链接一个外部JavaScript文件失败，返回
-404，这首先会阻塞并行下载，接下来浏览器可能尝试解析404响应返回的内容，试图从其中
-找到有用的东西。
+有些站点提供在404s提供一个提示信息”你的意思是X？“，这对用户有很大的帮助，但是会\
+浪费服务端资源（如数据库等）。特别糟糕的是当链接一个外部JavaScript文件失败，返\
+回404，这首先会阻塞并行下载，接下来浏览器可能尝试解析404响应返回的内容，试图从\
+其中找到有用的东西。
 
 .. note::
 
@@ -641,55 +691,88 @@ HTTP请求要消耗相当的资源，因为发起一个HTTP请求最终得到一
 ===============
 标签：cookie
 
-HTTP cookies有着各种用途，如用户的认证和定制。cookies的内容通过HTTP的头部在WEB服务器和浏览器之间进行交换。重要的是尽可能的减小cookies的大小，以降低它对用户响应时间的影响。
+HTTP cookies有着各种用途，如用户的认证和定制。cookies的内容通过HTTP的头部在WEB\
+服务器和浏览器之间进行交换。重要的是尽可能的减小cookies的大小，以降低它对用户响\
+应时间的影响。
 
-更多的信息请查看Tenni Theurer和Patty Chi撰写的“\ `当cookie崩溃时`_\ ”，其主要观点为：
+更多的信息请查看Tenni Theurer和Patty Chi撰写的“\ `When the Cookie Crumbles`_\ ”\
+，其主要观点为：
 
 *   删除非必需的cookies
 *   保持cookies尽可能的小，以降低它对用户响应时间的影响
 *   请在合适的域级别设置cookie，以免影响其它域名
-*   （为cookie）设置一个合适的过期日期，在（cookie）过期前或被删除前，可以提高用户响应时间
+*   （为cookie）设置一个合适的过期日期，在(cookie)过期前或被删除前，可以提高用\
+    户响应时间
 
 .. note::
 
-    减小cookie的大小，以减小HTTP传输数据量，从而提高用户响应时间；为cookie设置一个过期日期，将cookie缓存在客户端。
+    减小cookie的大小，以减小HTTP传输数据量，从而提高用户响应时间；为cookie设置\
+    一个过期日期，将cookie缓存在客户端。
 
+.. _When the Cookie Crumbles:
+   http://yuiblog.com/blog/2007/03/01/performance-research-part-3/
 
 Use Cookie-free Domains for Components
 =======================================
 标签：cookie
 
-当浏览器请求一个静态文件（如图片）时附加上cookie信息，服务器并不会使用这些cookie。因此它们（cookie）只是浪费网络流量而毫无意义。\ **你应该确保在请求静态组件内容时不会携带cookie**\ 。可以创建一个子域用来存放静态内容。
+当浏览器请求一个静态文件（如图片）时附加上cookie信息，服务器并不会使用这些\
+cookie。因此它们（cookie）只是浪费网络流量而毫无意义。\ **你应该确保在请求静态\
+组件内容时不会携带cookie**\ 。可以创建一个子域用来存放静态内容。
 
-假设你的域名为\ *www.example.org*\ 你可以将静态内容置于\ *static.example.org*\ 下。然而，如果你将cookie设定在顶级域\ *example.org*\ 而不是\ *www.example.org*\
-将导致在请求\ *static.example.org*\ 下的内容时也会携带cookie。在这种情况下，你可能需要使用一个全新的域名来存放静态内容，以保持此域\ *cookie-free*\ 。例如：Yahoo使用yimg.com，YouTube使用\ *ytimg.com*\ ，Amazon使用\ *images-amazon.com*\ 来存放静态内容。
+假设你的域名为\ *www.example.org*\ 你可以将静态内容置于\ *static.example.org*\
+下。然而，如果你将cookie设定在顶级域\ *example.org*\ 而不是\ *www.example.org*\
+将导致在请求\ *static.example.org*\ 下的内容时也会携带cookie。在这种情况下，你\
+可能需要使用一个全新的域名来存放静态内容，以保持此域\ *cookie-free*\ 。例如：\
+Yahoo使用yimg.com，YouTube使用\ *ytimg.com*\ ，Amazon使用\ *images-amazon.com*\
+来存放静态内容。
 
-将静态内容存放在一个\ *cookie-free*\ 域的另一优势是：有些代理可以不会缓存包含cookie的请求。如此相关，如果你还没有想好使用\ *example.com*\ 还是\ *www.example.com*\ 作为你的主页，考虑到cookie的影响，如果没有\ *www*\ ，你毫无选择，只能在cookie的作用域中写\ *\*.example.org*\ ，出于（前面所提到的）性能上的因素，最好还是使用\ *www*\ 子域作用主页，并将cookie写在子域上。
+将静态内容存放在一个\ *cookie-free*\ 域的另一优势是：有些代理可以不会缓存包含\
+cookie的请求。如此相关，如果你还没有想好使用\ *example.com*\ 还是\
+*www.example.com*\ 作为你的主页，考虑到cookie的影响，如果没有\ *www*\ ，你毫无\
+选择，只能在cookie的作用域中写\ *\*.example.org*\ ，出于（前面所提到的）性能上\
+的因素，最好还是使用\ *www*\ 子域作用主页，并将cookie写在子域上。
 
 .. note::
 
-    竭力减少不必要的数据流量。对于不会使用cookie的静态内容，在请求时杜绝携带cookie。
-
-
+    竭力减少不必要的数据流量。对于不会使用cookie的静态内容，在请求时杜绝携带\
+    cookie。
 
 Minimize DOM Access
 ====================
-标签：CSS
+标签：javascript
 
-IE特有的过滤器\ ``AlphaImageLoader``\ 主要是为了修正低版本IE（<7）中真彩色PNG图片的半透明问题。这个过滤器会的问题在于：在图片在下载时，阻止浏览器进行渲染并会冻结浏览器；另外应该这一特性的元素会消耗更多的内存，不仅是图片，因此会引起更大的问题。
+JavaScript存取DOM元素通常慢，为了得到更多响应内容，你可以：
 
-最好的做法是完全避免使用\ ``AlphaImageLoader``\ ，使用在IE中工作的很好的PNG8来代替，如果你不得不使用它，请使用\ ``_filter``\ 来避免影响到使用IE7+的用户。
+*   对已存取过的元素进行缓存
+*   更新那些离线的结点，并且他们加入到树中
+*   避免通过JavaScript来固定侧面布局
 
-
-
-
+更加的信息你可以查看Julien Lecomte撰写的“\ `高性能Ajax应用
+<http://yuiblog.com/blog/2007/04/11/performance-research-part-4/>`\ ”。
 
 
 Develop Smart Event Handlers
 =============================
+标签：javascript
 
+有时页面响应较慢是因为DOM树中的不同元素被附加了太多的事件，而且这些事件被频繁的\
+执行。如果你在div中有10个按钮，只添加一个事件处理程序在div上以代替为每个按钮添\
+加一个事件处理程序，事件发生时，你可以捕捉到事件并知道是那个按钮产生的事件。这\
+就是为什么使用\ *事件代理(event delegations)*\ 是一个好方法。
 
+You also don't need to wait for the onload event in order to start doing
+something with the DOM tree. Often all you need is the element you want to
+access to be available in the tree. You don't have to wait for all images to be
+downloaded. DOMContentLoaded is the event you might consider using instead of
+onload, but until it's available in all browsers, you can use the YUI Event
+utility, which has an onAvailable method
 
+更多信息请查看Julien Lecomte所写的\ `高性能Ajax应用
+<http://yuiblog.com/blog/2007/12/20/video-lecomte/>`_\ 。
+
+.. _YUI Event:  https://developer.yahoo.com/yui/event/
+.. _onAvailable:    https://developer.yahoo.com/yui/event/#onavailable
 
 使用<link>代替@import
 ======================
@@ -697,7 +780,7 @@ Develop Smart Event Handlers
 
 前面的规则已经建议将CSS放置在页面的顶部以允许浏览器进行逐步渲染。
 
-对于IE, \ ``@import``\ 的作用与将\ ``<link>``\ 放置在页面底部等效，因此最好不要
+对于IE, \ ``@import``\ 的作用与将\ ``<link>``\ 放置在页面底部等效，因此最好不要\
 使用\ ``@import``\ 。
 
 
@@ -705,41 +788,92 @@ Avoid Filters
 ==============
 标签：CSS
 
+IE特有的过滤器\ ``AlphaImageLoader``\ 主要是为了修正低版本IE（<7）中真彩色PNG图\
+片的半透明问题。这个过滤器会的问题在于：在图片在下载时，阻止浏览器进行渲染并会\
+冻结浏览器；另外应该这一特性的元素会消耗更多的内存，不仅是图片，因此会引起更大\
+的问题。
+
+最好的做法是完全避免使用\ ``AlphaImageLoader``\ ，使用在IE中工作的很好的PNG8来\
+代替，如果你不得不使用它，请使用\ ``_filter``\ 来避免影响到使用IE7+的用户。
 
 
 优化图片大小
 ============
 标签：图片
 
+当设计师为你的网页制作好图片，在将图片上传至WEB服务器之前，你还可以对图片进行一\
+些处理：
 
+*   你可以检查GIF图片，看看使用的调色板大小是否与图片使用的色彩数相匹配。使用\
+    ``imagemagick``\ 可以很容易完成这项工作你可以检查GIF图片，看看使用的调色板\
+    大小是否与图片使用的色彩数相匹配。使用\ `imagemagick`_\ 很容易完成这个任务。
+    当图片使用了四色和256色调色板时，图片大小就有很大的压缩空间。
+*   试着将GIF转换为PNG格式，看看图片大小是否会减小，通常会减小一些。由于（以前\
+    ）浏览器对PNG图片的支持有限，不过这已经成为过去时了。（在此过程中）唯一的问\
+    题是真彩色PNG中的alpha透明，但是GIF不支持真彩色，也不支持可变的透明度，因为\
+    GIF 可以做到的，PNG（PNG8）调色板都可以做到（除了动画之外）。\
+    ``imagemagick``\ 中只需要输入下面的命令就可以安全的将GIF转换为PNG：
+
+    .. sourcecode:: text
+
+        convert image.gif image.png
+
+    我们只需要说：给PNG一个机会。
+
+*   使用PNG优化工具优化你的PNG图片，如\ `pngcrush`_\ ：
+    
+    ..sourcecode:: text
+
+        pngcrush image.png -rem alla -reduce-brute result.png
+
+*   使用JPEGs优化工具\ *jpegtran*\ 优化你的JPEG图片。它可以对JPEG进行一些无损操\
+    作，如：旋转，另外也可以优化和删除图片中的注释和其它无用信息（如EXIF信息）。
+
+    .. sourcecode:: text
+
+        jpegtran -copy none -optimize -perfect src.jpeg dest.jpeg
+
+.. _imagemagick: http://www.imagemagick.org/
+.. _pngcrush:   http://pmt.sourceforge.net/pngcrush/
 
 
 优化CSS Sprites
 ================
 标签：图片
 
+*   从水平方向布置图片通常比在垂直方向布置得到的图片更小；
+*   将颜色类似的图片合并到一个sprite中，可以降低颜色数量，理想情况是使得颜色小\
+    于256种可以符合PNG8标准
+*   为了使用sprite移动友好，图片间间隔不要太大。这并不会影响文件的大小，但是用\
+    户浏览器只需要较少的内存将图片解压为像素图。如：100×100的图片需要10000个像\
+    素；1000×1000的图片需要一百万个像素。
 
-
-不要在HTML中绽放图片
+不要在HTML中缩放图片
 ====================
 标签：图片
 
 不要因为可以通过HTML标签中的\ ``width``\ 和\ ``height``\ 属性来调整图片大小而使\
 用超过你需要的图片。如果你需要\ ``<img width="100" height="100" src="mycat.jpg"
-alt="My Cat" />``\ ,那么你的图片尺寸应该是100x100px，而不是使用规格为500x500px进
-行绽放。
+alt="My Cat" />``\ ,那么你的图片尺寸应该是100x100px，而不是使用规格为500x500px\
+进行缩放。
 
 
 使用favicon.ico尽可能小且可缓存
 ===============================
 标签：图片
 
-*favicon.ico*\ 是存放在你的站点顶级路径下的一张图片。它是一个无法避免的evil，因为即使你不关心，浏览器还是会一直请求它，因此最好不要返回一个\ *404 Not Found*\ 的响应。由于（与其它内容）在同一服务器上，所以每次请求\ *favicon.ico*\ 都会附带上cookie。这个图片也会影响到下载顺序。例如在IE中，当请求加载某一个组件时，\ *favicon.ico*\ 会在被请求内容之前下载。
+*favicon.ico*\ 是存放在你的站点顶级路径下的一张图片。它是一个无法避免的evil，因\
+为即使你不关心，浏览器还是会一直请求它，因此最好不要返回一个\ *404 Not Found*\
+的响应。由于（与其它内容）在同一服务器上，所以每次请求\ *favicon.ico*\ 都会附带\
+上cookie。这个图片也会影响到下载顺序。例如在IE中，当请求加载某一个组件时，\
+*favicon.ico*\ 会在被请求内容之前下载。
 
 因此为了减轻\ *favicon.ico*\ 带来的不良影响，请确保：
 
 *   *favicon.ico*\ 文件比较小，最小小于1K
-*   通过\ ``Expires``\ 为\ *favicon.ico*\ 设置一个合适的过期时间（如果你想更新favicon.ico，无法重命名）。你可以安全的过期日期设定为几个月之后。你可以能检查当前favicon.ico的修改时间以作出明智的决定。
+*   通过\ ``Expires``\ 为\ *favicon.ico*\ 设置一个合适的过期时间（如果你想更新\
+    favicon.ico，无法重命名）。你可以安全的过期日期设定为几个月之后。你可以能检\
+    查当前favicon.ico的修改时间以作出明智的决定。
 
 .. note::
 
@@ -755,20 +889,72 @@ alt="My Cat" />``\ ,那么你的图片尺寸应该是100x100px，而不是使用
 =================
 标签：移动
 
-
+这个限制主要是因为iPhone不缓存大于25K的文件内容。需要注意的是这个大小是指未压缩\
+时的大小。This is where minification is important because gzip alone may not be
+sufficient.
 
 Pack Components into a Multipart Document
 ==========================================
 标签：移动
 
-
+将组件合并到一个multipart document就像一封附带附件的电子邮件，它可以帮助你使用\
+一个HTTP请求来获取多个组件内容（请记住：HTTP请求是非常昂贵的）。当你使用这项技\
+术时，首先需要检查用户浏览器是否支持此技术。
 
 
 Avoid Empty Image src
 ======================
 标签：服务端
 
+下面两种情况可能导致一个\ *img*\ 标签的\ *src*\ 属性为空:
 
+*   HTML文档中：\ ``<img src=''>``
+*   JavaScript：
+
+    .. sourcecode:: javascript
+
+        var img = new Image();
+        img.src = '';
+
+上面两种情况都会导致浏览器额外的请求：
+
+*   IE将对页面所在的目录发起请求
+*   Safari和Chrome (WebKit)会请求实际页面
+*   Firefox 3及之前的版本的行为与WebKit相同，3.5以后的版本解决了这个\ `问题
+    <https://bugzilla.mozilla.org/show_bug.cgi?id=444931>`_\ ，不再发送请求
+*   Opera遇到上面的情况则什么也不会做（即不会发出额外的请求）
+
+为什么这是一种糟糕的做法？
+
+1.  向服务器发送大量无用的请求(unexpected traffic)会降低服务器的性能，特别是那\
+    些日浏览量达到百万的站点（攻击服务器方法之一？没听过）
+2.  浪费服务器的CPU去生成一个永远不会被访问的页面
+3.  可能会对用户数据造成误导。如果你正在通过cookie或其它方法追踪请求状态，你有\
+    可能破坏数据。即使是请求一张不会返回结果的图片，相应的响应头已经被浏览器读\
+    取接受，其中包括cookie，而响应的其它部分则被丢弃了，这可能会造成损害。（没\
+    太明白原文的意思）
+
+导致这一问题的根源是浏览器进行URI解析的方式。在\ :rfc:`3986`\ ——统一资源标识\
+（Uniform Resource Identifiers, URI）对此进行了定义。当URI是一个空字符串时，它\
+被看作是一个相对URI，并且依据5.2部分算法进行解析。对于特殊情况——空字符串，5.4\
+部分有介绍。Firefox, Safari和Chrome都按照正确的规范解决了URI为空字符串的问题，\
+而IE则没有正确的处理这个问题，虽然表面上看IE依据了早期的规范\ :rfc:`2396`\ （但\
+是它已经被\ :rfc:`3986`\ 所取代）。从技术上讲，所有的浏览器都做了它们应该什么的\
+事情，但问题是，造成URI为空完全是无心之过。
+
+HTML5在4.8.2节增加了对标签的\ *src*\ 的说明，告诉浏览器不要进行额外的请求：
+
+|   *src*\ 属性必须存在，且必须包含一个有效的URL，这个URL可以指向一个非交互式的\
+|   ，可以为动画的图片资源，但是不能是页面或脚本。如果此元素URI的base部分与文档\
+|   相同，那么\ *src*\ 的值不得为空字符串。
+
+但愿浏览器将来不会在存在这个问题，不幸的是，对\ *<script src=''>*\ 和\ *<link
+href=''*\ 。也许还有时间进行调整确保浏览器不会意外的声明这种行为。
+
+这条规则是Yahoo的JavaScript专家Nicolas C. Zakas所发现。更详细的信息请查看他的文\
+章“\ `空的img的src值可以摧毁你的站点
+<http://www.nczonline.net/blog/2009/11/30/empty-image-src-can-destroy-your-site
+/>`_\ ”。
 
 
 

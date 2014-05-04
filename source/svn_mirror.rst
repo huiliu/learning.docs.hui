@@ -3,7 +3,7 @@ SVN仓库安全之镜像备份
 
 软件需求
 =========
-本文经过在CentOS 5.5_X86上实验通过，相关软件有：
+本文经过在CentOS 5.5_X86上实验操作通过，所需相关软件有：
 
 *   操作系统：CentOS 5.5 X86
 *   mod_authz_ldap-0.26-9.el5
@@ -71,6 +71,28 @@ SVN仓库安全之镜像备份
 ``svnsync init``\ 会在主（源）－镜像（目标）仓库间建立连接，\ ``svnsync sync``\
 将主仓库中的数据同步到镜像仓库。如果数据比较多，会需要相当长的时间。
 
+.. warning::
+
+    运行\ ``svnsync init ... ...``\ 时可能会出现如下错误：
+
+    .. sourcecode:: text
+
+        svnsync: DAV request failed; it's possible that the repository's pre-revprop-change hook either failed or is non-existent
+        svnsync: At least one property change failed; repository is unchanged
+        svnsync: Error setting property 'sync-lock':
+        could not remove a property
+    
+    这个错误说明缺少\ *hook*\ “pre-revprop-change”。只需要镜像仓库的hook目录下\
+    创建一个可执行脚本文件\ ``pre-revprop-change``\ 返回0即可，如果此脚本返回值\
+    不为0会出现下面的提示：
+
+    .. sourcecode:: text
+
+        svnsync: DAV request failed; it's possible that the repository's pre-revprop-change hook either failed or is non-existent
+        svnsync: At least one property change failed; repository is unchanged
+        svnsync: Error setting property 'sync-lock':
+        版本属性改变 被 pre-revprop-change 钩子阻塞(退出代码 1) 输出：
+        Changing revision properties other than svn:log is prohibited
 
 安装hooks－实时镜像
 ====================

@@ -58,6 +58,7 @@ Welcome to Robin's Blog
     mongodb
     mysql_logs
     mysql_optimize
+    mysql_tuning
     mysql_key
 
 系统安全

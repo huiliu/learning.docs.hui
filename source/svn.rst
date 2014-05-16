@@ -78,6 +78,17 @@ SVN Q/A
     原因：在OS X上使用svn时会提示key的解密，奇怪的行为。（用户由管理员降为普通\
     用户，删除过\ *.subversion*\ ，移除过\ *.ssh*\ 均未奏效）
 
+7.  在Linux下利用\ *crontab*\ 定期更新一个SVN仓库时出错：
+
+    .. sourcecode:: text
+
+        svn: Can't convert string from 'UTF-8' to native encoding:
+        svn: /home/artsvn/trunk/icloud/D.?\233?\129?\147?\229?\133?\183
+
+    由于中文引起的乱码问题，在\ *crontab*\ 中可以设置环境变量\
+    ``LANG=zh_CN.UTF-8, LC_ALL=zh_CN.UTF-8``\ 就可以了。
+
+
 参数资料
 =========
 .. [#]  http://www.johngirvin.com/archives/subversion-cant-open-activity-db.html

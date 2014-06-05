@@ -52,6 +52,26 @@ Python-MySQL使用心得
 ----------------
 ``MySQLdb.escape_string()``\ 可以将用户的输入进行转义，防止SQL注入。
 
+如果字段中有中文，\ ``MySQLdb.escape_string()``\ 可能会出错：
+
+.. sourcecode:: python
+
+    Traceback (most recent call last):
+      File "parse.py", line 218, in <module>
+        insert(path_name, tbl_name)
+      File "parse.py", line 171, in insert
+        value += "'%s'," % MySQLdb.escape_string(v)
+    UnicodeEncodeError: 'ascii' codec can't encode characters in position 0-2: ordinal not in range(128)
+
+从上面的提示可以看到，是因为变量v使用的是\ `ascii`\ 编码，由此联想到python默认\
+使用的是\ `ascii`\ ，只需要将其调整一下应该就可以了：
+
+.. sourcecode:: python
+
+    # 将其插入到上面代码的前面再运行，就不会出错了
+    import sys
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
 
 如何提供用户接口
 ==================

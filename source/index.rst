@@ -60,6 +60,8 @@ Welcome to Robin's Blog
     mysql_optimize
     mysql_tuning
     mysql_key
+    mysql_status
+    mysql_replication
 
 系统安全
 ^^^^^^^^^^

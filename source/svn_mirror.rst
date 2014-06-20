@@ -231,6 +231,32 @@ SVN仓库安全之镜像备份
     能会出现各种错误。\ **建议完成重建一个镜像仓库。**
 
 
+问题说明
+========
+在实际运行过程中会出现各种奇怪的问题，集结如下：
+
+1.  运行命令\ ``svnsync sync http://xxx.xxx.xxx/backup/xxxx``\ 提示错误：
+
+    .. sourcecode:: text
+
+        Transmitting file data .svnsync: Corrupt representation '9890 0 12903 ..
+
+    猜想应该是revision 9890有问题，将镜像仓库的相当修订号改为小于9890，再运行\
+    同步命令成功。
+
+    .. note::
+
+        调整镜像仓库修订号需要修改文件\ ``db/current``\ 和\ ``db/revprops/0/0``\
+
+
+2.  运行同步命令时，提示错误：
+
+    .. sourcecode:: text
+
+        Transmitting file data ....svnsync: Server sent unexpected return value (423 Locked) in response to PUT request for '/backup/
+
+    提示无法获取锁，将镜像仓库目录\ ``db/locks``\ 下的文件删除，再同步即可。
+
 参考说明
 ==========
 .. [#]  运行\ ``svnadmin load``\ 时，如果主仓库（“\ */repos/hello*\ ”）中的文件\

@@ -87,6 +87,28 @@ Python的\ ``print``\ 语句也可以利用相似的语法在终端打开彩色�
 
     print("\x1B[32mHello World\x1B[0m")
 
+    # Python彩色文字
+    green = lambda string: '\x1B[32m%s\x1B[0m' % string
+    yellow = lambda string: '\x1B[31m\x1B[1m%s\x1B[0m' % string
+    red = lambda string: '\x1B[33m\x1B[1m%s\x1B[0m' % string
+
+    warning = lambda msg: '[%s]: %s' % (yellow('警告'), msg)
+    error = lambda msg: '[%s]: %s' % (yellow('错误'), msg)
+
+.. note::
+
+    Below are the color init strings for the basic file types. A color init
+    string consists of one or more of the following numeric codes:
+
+    Attribute codes:
+        00=none 01=bold 04=underscore 05=blink 07=reverse 08=concealed
+
+    Text color codes:
+        30=black 31=red 32=green 33=yellow 34=blue 35=magenta 36=cyan 37=white
+
+    Background color codes:
+        40=black 41=red 42=green 43=yellow 44=blue 45=magenta 46=cyan 47=white
+
 Tips 5 求N天前的日期字符串
 ==============================
 个人觉得这个问题要完全正确是要花一点力气的，首先必须考虑以下情况：

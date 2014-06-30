@@ -352,6 +352,57 @@ agent的调试日志，在其中发现：
     
     * 使用IP/域名配置Server，agent
 
+``Zabbix Server is not running``
+---------------------------------
+请确认数据库的配置是否正确，特别是调整过相关配置时：\ [#notrun]_
+
+1.  Zabbix Server的配置文件\ ``/etc/zabbix/zabbix_server.conf``
+2.  前端网页的配置文件：\ ``/etc/zabbix/web/zabbix.conf.php``
+
+如果确认上面两处设置正确，请继续：
+
+1.  检查是否开启了SELinux功能：
+
+    .. sourcecode:: bash
+    
+        [root@puppet ~]# sestatus 
+        SELinux status:                 enabled     # enabled说明开启了SELinux
+        SELinuxfs mount:                /selinux
+        Current mode:                   enforcing
+        Mode from config file:          enforcing
+        Policy version:                 24
+        Policy from config file:        targeted
+
+2.  请查看日志文件\ ``/var/log/audit/audit.log``\ 中是否有拒绝http操作的记录。
+    如：（如果没有安装\ ``audit``\ 或启用\ ``auditd``\ 服务，则没有日志）
+
+    .. sourcecode:: text
+
+        type=AVC msg=audit(1403973943.600:949): avc:  denied  { name_connect }
+        for  pid=2702 comm="httpd" dest=10051
+        scontext=unconfined_u:system_r:httpd_t:s0
+        tcontext=system_u:object_r:port_t:s0 tclass=tcp_socket 
+        9058 type=SYSCALL msg=audit(1403973943.600:949): arch=c000003e
+        syscall=42 success=no exit=-13 a0=d a1=7fb9ac277ba0 a2=1c a3=ff00
+        items=0 ppid=2659 pid=2702 auid=0 uid=48 gid=48 euid=48 suid=48
+        fsuid=48 egid=48 s     gid=48 fsgid=48 tty=(none) ses=1 comm="httpd"
+        exe="/usr/sbin/httpd" subj=unconfined_u:system_r:httpd_t:s0 key=(null)     
+
+3.  接下来请查看SELinux策略是否允许http服务连接数据库：
+
+    .. sourcecode:: bash
+
+        [root@puppet ~]# getsebool -a | grep http
+        allow_httpd_anon_write --> off
+        allow_httpd_mod_auth_ntlm_winbind --> off
+        allow_httpd_mod_auth_pam --> off
+        allow_httpd_sys_script_anon_write --> off
+        httpd_builtin_scripting --> on
+        httpd_can_check_spam --> off
+        httpd_can_network_connect --> on        # 如果此项为off，则http无法连
+        接数据库
+        httpd_can_network_connect_cobbler --> off
+        httpd_can_network_connect_db --> off
 
 参考资料
 =========
@@ -359,3 +410,4 @@ agent的调试日志，在其中发现：
 .. [#r2] https://www.zabbix.com/documentation/2.0/manual/config/items/itemtypes/log_items
 .. [#r3] https://www.zabbix.com/documentation/2.0/manual/config/items/itemtypes/zabbix_agent#supported_item_keys
 .. [#alert] `Custom alertscripts <https://www.zabbix.com/documentation/2.2/manual/config/notifications/media/script>`_
+.. [#notrun]    http://blog.csdn.net/frank0521/article/details/17378915

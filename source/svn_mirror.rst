@@ -249,13 +249,37 @@ SVN仓库安全之镜像备份
         调整镜像仓库修订号需要修改文件\ ``db/current``\ 和\ ``db/revprops/0/0``\
 
 
-2.  运行同步命令时，提示错误：
+2.  运行同步命令\ ``svnsync sync http://xxxx/backup/xxx``\ 时，提示错误：
 
     .. sourcecode:: text
 
         Transmitting file data ....svnsync: Server sent unexpected return value (423 Locked) in response to PUT request for '/backup/
 
     提示无法获取锁，将镜像仓库目录\ ``db/locks``\ 下的文件删除，再同步即可。
+
+3.  运行命令\ ``svnsync sync http://xxxx/backup/xxx``\ 出现下面的错误：
+
+    .. sourcecode:: text
+
+        Failed to get lock on destination repos, currently held by 'devhome:8b8d326b-34b1-4fe1-8a81-a33e841d5047'
+        Failed to get lock on destination repos, currently held by 'devhome:8b8d326b-34b1-4fe1-8a81-a33e841d5047'
+        Failed to get lock on destination repos, currently held by 'devhome:8b8d326b-34b1-4fe1-8a81-a33e841d5047'
+        Failed to get lock on destination repos, currently held by 'devhome:8b8d326b-34b1-4fe1-8a81-a33e841d5047'
+        Failed to get lock on destination repos, currently held by 'devhome:8b8d326b-34b1-4fe1-8a81-a33e841d5047'
+        Failed to get lock on destination repos, currently held by 'devhome:8b8d326b-34b1-4fe1-8a81-a33e841d5047'
+        Failed to get lock on destination repos, currently held by 'devhome:8b8d326b-34b1-4fe1-8a81-a33e841d5047'
+        Failed to get lock on destination repos, currently held by 'devhome:8b8d326b-34b1-4fe1-8a81-a33e841d5047'
+        Failed to get lock on destination repos, currently held by 'devhome:8b8d326b-34b1-4fe1-8a81-a33e841d5047'
+        Failed to get lock on destination repos, currently held by 'devhome:8b8d326b-34b1-4fe1-8a81-a33e841d5047'
+        svnsync: Couldn't get lock on destination repos after 10 attempts
+
+    打开SVN仓库中的文件\ ``db/revprops/0/0``\ 你会发现最后几行有\ ``sync-lock``\
+    和上面的UUID值，所以只要将此lock删除掉就可以。比较安全的方法是使用命令删除：
+    [#ref_lock]_
+
+    .. sourcecode:: bash
+
+        svn propdel --revprop -r0 svn:sync-lock file:///path/to/the/repository
 
 参考说明
 ==========
@@ -278,3 +302,6 @@ SVN仓库安全之镜像备份
             done
 
         利用上面的命令可以将SVN仓库中的锁信息保存在文件中将其删除
+
+.. [#ref_lock]  `svnsync - couldn't get lock on destination repos 
+                <http://stackoverflow.com/questions/4077601/svnsync-couldnt-get-lock-on-destination-repos>`_

@@ -3,11 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Robin's Blog
-====================================
+
 
 文章列表
------------
+==========
 .. toctree::
     :maxdepth: 1
 
@@ -36,7 +35,7 @@ Welcome to Robin's Blog
     http_header
 
 内核
-^^^^^
+-----
 .. toctree::
     :maxdepth: 1
 
@@ -45,7 +44,7 @@ Welcome to Robin's Blog
     epoll_man
 
 数据库
-^^^^^^
+------
 .. toctree::
     :maxdepth: 1
 
@@ -64,7 +63,7 @@ Welcome to Robin's Blog
     mysql_replication
 
 系统安全
-^^^^^^^^^^
+----------
 .. toctree::
     :maxdepth: 1
 
@@ -79,7 +78,7 @@ Welcome to Robin's Blog
     logfilter
 
 系统监控
-^^^^^^^^^
+---------
 .. toctree::
     :maxdepth: 1
 
@@ -91,7 +90,7 @@ Welcome to Robin's Blog
     proc
 
 持续集成CI
-^^^^^^^^^^^
+-----------
 .. toctree::
     :maxdepth: 1
     
@@ -101,7 +100,7 @@ Welcome to Robin's Blog
 
 
 编程
-^^^^^^^^
+--------
 .. toctree::
     :maxdepth: 1
     
@@ -112,7 +111,7 @@ Welcome to Robin's Blog
     libevent
 
 Python
-^^^^^^
+------
 .. toctree::
     :maxdepth: 1
 
@@ -124,7 +123,7 @@ Python
     python_var
 
 生活
-^^^^^
+-----
 .. toctree::
     :maxdepth: 1
 

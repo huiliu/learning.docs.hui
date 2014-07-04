@@ -303,7 +303,107 @@ Unity3D支持命令行编译，常用命令行参数选项有：\ [#cmd_param]_
 
 PostprocessBuildPlayer
 -----------------------
-`Unity3D`\程序编译Player完成后会执行\ `Editor`\ 目录下\ ``PostprocessBuildPlayer``\ 程序（任意可执行代码）进行相关操作。\ [#]_\ 在当前项目中由于不同渠道提供的SDK千奇百怪，有时需要使用此功能向xcode项目中添加文件。当前项目中的\ ``PostprocessBuildPlayer``\ 是使用python所写，用于向xcode项目添加91的SDK。
+`Unity3D`\程序编译Player完成后会执行\ `Editor`\ 目录下\
+``PostprocessBuildPlayer``\ 程序（任意可执行代码）进行相关操作。\ [#]_\
+在当前项目中由于不同渠道提供的SDK千奇百怪，有时需要使用此功能向xcode项目中添加\
+文件。当前项目中的\ ``PostprocessBuildPlayer``\ 是使用python所写，用于向xcode项\
+目添加91的SDK。
+
+``Unity``\ 调用\ ``PostprocessBuildPlayer``\ 时会向其传递7个参数：
+
+.. sourcecode:: perl
+
+    #!/usr/bin/perl
+    
+    my $installPath = $ARGV[0];
+    
+    # The type of player built:
+    # "dashboard", "standaloneWin32", "standaloneOSXIntel", "standaloneOSXPPC", "standaloneOSXUniversal", "webplayer"
+    my $target = $ARGV[1];
+    
+    # What optimizations are applied. At the moment either "" or "strip" when Strip debug symbols is selected.
+    my $optimization = $ARGV[2];
+    
+    # The name of the company set in the project settings
+    my $companyName = $ARGV[3];
+    
+    # The name of the product set in the project settings
+    my $productName = $ARGV[4];
+    
+    # The default screen width of the player.
+    my $width = $ARGV[5];
+    
+    # The default screen height of the player 
+    my $height = $ARGV[6];
+    
+    print ("\n*** Building at '$installPath' with target: $target \n");
+
+在三国中我们使用python来实现\ ``PostprocessBuildPlayer``\ 向Xcode项目中添加文件：
+
+.. sourcecode:: python
+
+    #!/usr/bin/env python
+    # -*- coding: utf-8 -*-
+    
+    """Unity3D PostprocessBuildPlayer
+    用于向Unity3D导出的xcode项目中添加额外的文件。
+    
+    由于unity3D会输出各种不同的客户端，并接入不同的平台（使用不同的SDK），由此知道\
+    会添加各种不同的文件，而Unity3D再编译完成后均会调用\ ``PostprocessBuildPlayer``\
+    。为了可以正确的添加相应的SDK信息，需要在\ ``PostprocessBuildPlayer``\ 中根据\
+    Unity3D传递的参数来进行判断。Unity3D会向\ ``PostprocessBuildPlayer``\ 传递一些\
+    参数，其中\ ``sys.argv[1]``\ 为安装路径（即导入xcode的路径）；\ ``sys.argv[2]``\
+    为BuildTarget（即：Andriod, iPhone ...）。
+    
+    **在编译时将不同版本，不同运营商的客户端输出到不同的路径，上面两个参数就可以用\
+    于确定相应添加什么文件。**
+    
+    Author: Liu Hui
+    Date: Sat Feb  8 14:07:41 CST 2014
+    """
+    
+    import sys
+    from mod_pbxproj import XcodeProject
+    
+    # 请根据实际情况修改\ ``xcode_path, agent``\ 的值
+    # ``agent``\ 的值与命令行编译脚本\ ``CommandCompiler.cs``\ 中的output相对应
+    xcode_path = '/Users/xcode/xcode_project'
+    agent = 'dj91'
+    xcode_project_path = '%s/%s' % (xcode_path, agent)
+    
+    if sys.argv[2].lower() != 'iphone':
+        sys.exit(0)
+    elif sys.argv[2].lower() == 'iphone' and sys.argv[1] == xcode_project_path:
+        pass
+    
+    
+    # 请根据实际情况修改或增加SDK路径：\ ``DJ_PATH``\ 的值
+    DJ_PATH = '/Users/xcode/GameSDK/DJGameSDK1'
+    system_framework_path = '/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks'
+    pbxproj = '%s/Unity-iPhone.xcodeproj/project.pbxproj' % xcode_project_path
+    
+    # 添加第三方SDK信息
+    dj_resource = '%s/Resources' % DJ_PATH
+    dj_frm = '%s/DJGame.framework' % DJ_PATH
+    dj_unity3d_frm = '%s/DJGameForUnity3D.framework' % DJ_PATH
+    
+    # 添加依赖系统框架
+    messageui = '%s/MessageUI.framework' % system_framework_path
+    coretext = '%s/CoreText.framework' % system_framework_path
+    
+    project = XcodeProject.Load(pbxproj)
+    
+    project.add_folder(dj_resource)
+    project.add_folder(dj_frm)
+    project.add_folder(dj_unity3d_frm)
+    project.add_folder(messageui)
+    project.add_folder(coretext)
+    
+    if project.modified:
+        project.backup()
+        project.save()
+
+
 
 基本构建步骤
 -------------

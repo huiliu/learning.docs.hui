@@ -20,6 +20,9 @@
 由于使用的是livirt的默认配置，所以此外关于DHCP的配置与标准DHCP服务器的配置有所
 不同。\ [#libvirt_dhcp_bootp]_
 
+libvirtd虚拟机
+--------------
+
 运行命令\ ``virsh net-edit default``\ ，上面的命令会用vim打开defautl网络的配置\
 文件，请在<dhcp></dhcp>中增加：\
 ``<bootp file='pxelinux.0' server='192.168.122.1'/>``\ ，以指明tftp服务器地址
@@ -28,10 +31,13 @@
 
 然后（重新）启动libvirtd服务器：\ ``systemctl restart libvirtd``
 
-如果使用的是独立的DHCP服务器，请参考鸟哥及其它说明。\ [#dhcp_setup]_ \ 。其中
-关键是在DHCP服务器上指明tftp服务器的地址和读取的文件名。
+单独的dhcpd服务
+---------------
+如果使用的是独立的DHCP服务器，请参考鸟哥及其它说明。\ [#dhcp_setup1]_\
+[#dhcp_setup2]_  \ 。其中关键是在DHCP服务器上指明tftp服务器的地址和读取的文件名。
 
 .. sourcecode:: linux-config
+    :emphasize-lines: 6,7
 
     # cat /etc/dhcp/dhcpd.conf 
     subnet 192.168.122.0 netmask 255.255.255.0 {
@@ -41,6 +47,24 @@
         next-server 192.168.122.1; # PXE Server地址
         filename "pxelinux.0";      # 引导文件名
     }
+
+windows DHCP服务器
+------------------
+如果使用的是windows DHCP服务器，请按以下步骤设定\ ``next-server``\ （启动服务器\
+主机名，启动文件名）值：\ [#win_dhcpd1]_\ [#win_dhcpd2]_
+
+*   打开DHCP管理界面
+*   右键单击运行中的DHCP服务器，选择“\ ``设置预定义的选项...``\ ，将会弹出一个\
+    窗口
+*   第一个下拉栏（选项类别）选择“\ ``DHCP标准选项``\ ”，第二个下拉栏（选项名）\
+    选择\ ``066 启动服务器主机名``\ 在值中填入tftp服务器IP，确定。
+*   重复上一步，第二个下拉栏（选项名）选择“\ ``067 启动文件名``\ ”，填上\
+    ``pxelinux.0``\ （与后面设定的文件名有关），确定。
+*   右键单击右侧树形栏中“作用域－作用域选项”，选择“\ ``配置选项``\ “，勾选'\
+    ``066, 067``\ '两个选项，然后确定
+*   此时可以看到”作用域选项“的右侧栏中有”\ ``066 启动服务器主机名,
+    067启动文件名``\ 两个选项
+*   配置完成。
 
 配置tftp服务器及安装相关文件
 =============================
@@ -134,5 +158,7 @@
 =========
 .. [#libvirt_dhcp_bootp]  `Setting up a TFTP server, PXE boot server with libvirt and virt-manager for ovirt-node <http://dougsland.livejournal.com/123242.html>`_
 .. [#libvirt_network_xml]   `libvirt Network XML format <http://libvirt.org/formatnetwork.html>`_
-.. [#dhcp_setup]    `CentOS6.4 x86_64 kvm+PXE备忘录 <http://kumu-linux.github.io/blog/2013/08/22/kvm/>`_
-            `鸟哥 <http://linux.vbird.org/linux_enterprise/0120installation.php>`_
+.. [#dhcp_setup1]   `CentOS6.4 x86_64 kvm+PXE备忘录 <http://kumu-linux.github.io/blog/2013/08/22/kvm/>`_
+.. [#dhcp_setup2]   `鸟哥 <http://linux.vbird.org/linux_enterprise/0120installation.php>`_
+.. [#win_dhcpd1]    `Win2003 DHCP设置、PXE服务设置、网启WINPE <http://wenku.baidu.com/view/206d87ba1a37f111f1855b01.html>`_
+.. [#win_dhcpd2]    `How to Add DHCP PXE Options to Microsoft DHCP Server <http://support.citrix.com/article/CTX115094>`_

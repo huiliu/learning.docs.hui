@@ -1,0 +1,69 @@
+digraph G {
+    node [style=rounded, shape=record];
+
+    create [shape=box,style=rounded, label="int epoll_create(int size);",
+    fontsize=16, fontcolor=red];
+/*
+    ctl [label="int epoll_ctl(int epfd, int op, int fd, struct epoll_event* events);"];
+    wait [label="int epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout);"];
+*/
+
+    subgraph cluster_ctl {
+        fontcolor=red
+        node [shape=record];
+        label="int epoll_ctl(int epfd, int op, int fd, struct epoll_event* events);"
+        ctl_params [label="{<f0> int epfd|<f1> int op|int fd|<f2>struct
+        epoll_event* events}"];
+    }
+
+    subgraph cluster_wait {
+        node [shape=record];
+        fontcolor=red
+        label="int epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout);";
+        wait_params [label="{<f0> int epfd|<f1> struct epoll_event* events|int
+        maxevents|<f3> int timeout}"];
+    }
+
+    subgraph cluster_event {
+        label="struct epoll_event"
+        fontcolor=blue
+        node [shape=record];
+        struct_event [label="{<f0> uint32_t events;|<f1> epoll_data_t data;}"];
+    }
+    subgraph cluster_data {
+        label="struct epoll_data"
+        fontcolor=blue
+        node [shape=record];
+        struct_data [label="{void* ptr;|int fd;|uint32_t u32;|uint64_t u64;}"];
+    }
+
+    subgraph cluster_events {
+        label="event values"
+        fontcolor=green
+        node [shape=record];
+        evs
+        [label="{EPOLLIN|EPOLLOUT|EPOLLRDHUP|EPOLLPRI|EPOLLER|EPOLLHUP|EPOLLET|EPOLLONESHOT|EPOLLWAKEUP}"];
+    }
+
+    subgraph cluster_ops {
+        label="ops"
+        fontcolor=green
+        node [shape=record];
+        ops [label="{EPOLL_CTL_ADD|EPOLL_CTL_MOD|EPOLL_CTL_DEL}"];
+    }
+    subgraph cluster_timeout {
+        label="timeout value"
+        fontcolor=green
+        node [shape=record];
+        timeout [label="{\>0, milliseconds|0, return immediately|-1, block infinitely}"];
+    }
+
+    struct_event:f0 -> evs;
+    struct_event:f1 -> struct_data;
+    ctl_params:f1 -> ops;
+    ctl_params:f2 -> struct_event;
+    wait_params:f1 -> struct_event;
+    wait_params:f3 -> timeout;
+    create -> ctl_params:f0;
+    create -> wait_params:f0;
+}

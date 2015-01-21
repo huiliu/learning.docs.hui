@@ -130,14 +130,34 @@ Samba还提供了一系列更加详细的参数，可以更好的控制日志信
 
     valid users = sheldon, penny, @wheel
 
-匿名共享开关
+匿名共享
 ^^^^^^^^^^^^
-*   如果将选项"``guest ok``"和"``public``"（两者等同）设为"``ok``"，则相应的共\
+*   匿名共享有多种方式进行：
+    
+    *   最简单的是全局匿名共享，将[global]中的\ ``security``\ 设置为\ ``share``\
+        即可，这种方式一般用于打印机共享；
+    *   另外一种是对指定的资源进行匿名共享，而一部分还是需要密码访问。
+
+*   全局共享模式：
+    
+    *   将[global]中\ ``security=share``
+    *   在相应的资源中添加\ ``guest ok = yes``, ``public = yes``
+
+*   部分匿名共享模式
+
+    *   在[global]中，将\ ``security=user``
+    *   在[global]中，将\ ``map to guest = Bad User``
+    *   在相应的共享资源中添加：\ ``guest accout = nobody``, ``guest ok = yes``
+
+详细说明请查看man smb.conf(5)的\ **Security**
+
+
+    如果将选项"``guest ok``"和"``public``"（两者等同）设为"``ok``"，则相应的共\
     享资源无需密码即可访问。相应的访问权限取决于选项"``guest account``"的设定值。
 
-*   选项"``guest account``"的设定值为一个用户名，表示samba客户端以guest身份访问\
+    选项"``guest account``"的设定值为一个用户名，表示samba客户端以guest身份访问\
     共享资源时，在samba服务器上所使用的用户身份。
-*   选项"``guest only``"设定为"``yes``"，共享资源将只允许匿名访问。"``guest
+    选项"``guest only``"设定为"``yes``"，共享资源将只允许匿名访问。"``guest
     ok``"为"``yes``"时，此选项才能生效，如：
 
     .. sourcecode:: ini
@@ -316,6 +336,13 @@ Linux下浏览，挂载Samba共享文件
     ``tree connect failed: NT_STATUS_BAD_NETWORK_NAME``\ 。
 
     **原因：**\ 连接的目录\ ``dir``\ 不正确，不存在。
+
+3.  当使用匿名共享与认证共享混合时，Windows访问可能会提示"\ **不允许一个用户使\
+    用一个以上用户名与一个服务器或共享资源的多重连接**\ "。
+
+    **解决：**\ 打开cmd，输入命令 ``net use``\ 查看本机当前的共享连接，可以发现\
+    本机当前已经连接上了samba服务器上的匿名共享资源，清除这个连接(\
+    ``net use * /del``\)，再直接输入需认证访问的资源的路径即可。
 
 参考资料
 ========

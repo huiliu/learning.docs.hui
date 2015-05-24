@@ -42,6 +42,7 @@
     kernel
     lsp01
     epoll_man
+    epoll
 
 docker
 -------

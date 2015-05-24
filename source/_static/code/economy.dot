@@ -1,0 +1,15 @@
+
+digraph G
+{
+    node [fontname="WenQuanYi Micro Hei Mono", shape=record, style=rounded];
+
+    moneny [label="{货币供应量 | 利率 | 再贴现率 | 法定准备金率}"];
+    capital [label="{资本充足率 | 金融杠杆率 | 不良贷款率 | 资本收益率 | 流动性\
+    比率}"];
+    stack [label="{股指 | 市盈率 | 商品期货指数}"];
+    trade [label="{进出口总额 | 汇率 | 对外贸易依存率 | 外汇储备 | 进出口退税\
+    | 外商直接投资}"];
+    consume [label="{最终消费支出 | 消费者信心指数 | 储蓄率}"];
+    human [label="{人口自然增长率 | 抚养比 | 平均预期寿命}"];
+    finance [label="{财政收入 | 财政支出 | 财政赤字率 | 偿债率 | 负债率}"];
+}

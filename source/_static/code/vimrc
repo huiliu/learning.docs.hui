@@ -1,0 +1,155 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+Plugin 'vim-scripts/taglist.vim'
+Plugin 'ervandew/supertab'
+Plugin 'Mizuchi/STL-Syntax'
+Plugin 'Raimondi/delimitMate'
+Plugin 'scrooloose/nerdcommenter' " 快速注释
+Plugin 'nathanaelkane/vim-indent-guides' " 缩进
+Plugin 'altercation/vim-colors-solarized' " 配色
+Plugin 'tomasr/molokai' " 配色
+Plugin 'junegunn/vim-easy-align'
+Plugin 'scrooloose/nerdtree'
+Plugin 'minibufexpl.vim'
+"Plugin 'Rip-Rip/clang_complete'
+"Plugin 'vim-scripts/AutoComplPop'
+"Plugin 'Shougo/neocomplcache.vim'
+
+
+" The following are examples of different formats supported.
+" Keep Plugin commands between vundle#begin/end.
+" plugin on GitHub repo
+"Plugin 'tpope/vim-fugitive'
+" plugin from http://vim-scripts.org/vim/scripts.html
+"Plugin 'L9', {'rtp': '~/.vim/bundle/L9/'}
+"Plugin 'L9'
+" Git plugin not hosted on GitHub
+"Plugin 'git://git.wincent.com/command-t.git'
+" git repos on your local machine (i.e. when working on your own plugin)
+"Plugin 'file:///home/gmarik/path/to/plugin'
+" The sparkup vim script is in a subdirectory of this repo called vim.
+" Pass the path to set the runtimepath properly.
+"Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+" Avoid a name conflict with L9
+"Plugin 'user/L9', {'name': 'newL9'}
+"
+" Saltstack vim
+"Plugin 'saltstack/salt-vim', {'rtp': '~/.vim/bundle/salt-vim/'}
+Plugin 'saltstack/salt-vim'
+
+" Track the engine.
+"Bundle 'SirVer/ultisnips', {'rtp': '~/.vim/bundle/ultisnips/'}
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsListSnippets = "<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+
+" Install YCM
+"
+"   cd ~/.vim/bundle/YouCompleteMe
+"   ./install.sh --clang-completer --system-libclang --system-boost
+
+Plugin 'Valloric/YouCompleteMe'
+" 加载.ycm_extra_conf.py无需提示
+let g:ycm_confirm_extra_conf=0
+" 
+let g:ycm_key_list_select_completion=['<C-n>','<Down>']
+let g:ycm_key_list_previous_completion=['<C-p>','<Up>']
+"let g:ycm_key_invoke_completion='<C-Space>'
+let g:SuperTabDefaultCompletionType = '<C-n>'
+" 语法关键字补全
+let g:ycm_seed_identifiers_with_syntax=1
+" 允许基于tags文件
+let g:ycm_collect_identifiers_from_tags_files=1
+" 注释中同样补全
+let g:ycm_complete_in_comments=1
+" 日志级别
+let g:ycm_server_log_level = 'debug'
+"let g:syntastic_error_symbol = '✗'
+"let g:syntastic_warning_symbol = '⚠'
+
+set completeopt-=preview
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList          - list configured plugins
+" :PluginInstall(!)    - install (update) plugins
+" :PluginSearch(!) foo - search (or refresh cache first) for foo
+" :PluginClean(!)      - confirm (or auto-approve) removal of unused plugins
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+"
+set history=200
+syntax enable
+set encoding=utf-8
+
+set nu
+set ruler
+set showcmd
+set wildmenu
+set showmode
+set incsearch
+
+set cursorline
+set cursorline
+
+set expandtab
+"autocmd FileType make setlocal noexpandtab
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+set smarttab
+
+set textwidth=78
+set formatoptions+=m
+set formatoptions+=B
+
+"let g:solarized_termcolors=256
+"colorscheme vibrantink
+set background=dark
+colorscheme solarized
+
+" 缩进标线，貌似没有显示 
+" :help indent_guides_auto_colors
+let g:indent_guides_enable_on_vim_startup=1
+let g:indent_guides_auto_colors = 0
+let g:indent_guides_start_level = 2
+let g:indent_guides_guide_size =  1
+hi IndentGuidesOdd  ctermbg=black
+hi IndentGuidesEven ctermbg=darkgrey
+
+" open NERDTree when vim starts up
+autocmd vimenter * NERDTree
+
+" switch MiniBufExplorer windows
+map   <C-Tab> :MBEbn<CR>
+map <C-S-Tab> :MBEbp<CR>
+
+" EasyAlign
+vmap      <Enter>   <Plug>(EasyAlign)
+nmap         ga     <Plug>(EasyAlign)
+
+map         <F2>    aDate: <Esc>:read !date<CR>kJ
+"nnoremap <leader>jd <Esc>:YcmCompleter Goto<CR>=expand("<cword>")<CR><CR>
+nnoremap <leader>jd :YcmCompleter Goto<CR>

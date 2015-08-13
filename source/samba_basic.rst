@@ -344,6 +344,18 @@ Linux下浏览，挂载Samba共享文件
     本机当前已经连接上了samba服务器上的匿名共享资源，清除这个连接(\
     ``net use * /del``\)，再直接输入需认证访问的资源的路径即可。
 
+4.  ``/var/log/messages``\ 中一直收到错误日志消息：\ ``failed to retrieve
+    printer list: NT_STATUS_UNSUCCESSFUL``\ 。
+
+    **解决：**\ 禁用samba的printer服务。在samba的配置文件\
+    ``/etc/samba/smb.conf``\ 中添加：
+
+    .. sourcecode:: ini
+
+        load printers = no
+        printing = bsd
+        printcap name = /dev/null
+
 参考资料
 ========
 .. [#man]   `smb.conf(5) <http://www.samba.org/samba/docs/man/manpages-3/smb.conf.5.html>`_

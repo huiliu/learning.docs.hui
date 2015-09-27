@@ -1,0 +1,426 @@
+
+digraph libevent {
+
+    subgraph cluster_event_base {
+        label = <<B>event_base</B>>
+        fontsize=22;
+        node[shape=box, style=rounded];
+
+        event_base [label=<<B>struct</B> <I>event_base</I>>, color=red];
+        event_base_constructor [
+                             shape=record,
+                             label=<{<B>struct</B> event_base* <I>event_base_new</I>(void);
+                                   |<B>const struct</B> event_base* <I>event_base_new_with_config</I>(const struct event_config *);
+                                   |<B>void</B> <I>event_base_free</I>(<B>struct</B> event_base *base);
+                                   |
+                                   |<B>int</B> <I>event_reinit</I>(<B>struct</B> event_base *base);
+                                   }>
+                            ];
+
+        event_base_priority [
+                             shape=record,
+                             label=<{
+                                         <B>int</B> <I>event_base_priority_init</I>(<B>struct</B> event_base *base, <B>int</B> n_priorities);
+                                        |<B>int</B> <I>event_base_get_npriorities</I>(<B>struct</B> event_base *base);
+                                    }>
+        ];
+    }
+    
+    subgraph cluster_event_config {
+
+        label = <<B>event_config</B>>
+        fontsize=22;
+        node[shape=box, style=rounded];
+
+        event_config [label=<<B>struct</B> <I>event_config</I>>, color=red];
+
+        event_config -> event_base[color="#00ff00"];
+
+        subgraph cluster_event_config_function {
+
+            label = <<B>event_config</B>操作>;
+            style=dashed;
+            
+            config_function [shape=record, label=<{
+             <B>struct</B> event_config* <I>event_config_new</I>(void);
+            |<B>void</B> <I>event_config_free</I>(<B>struct</B> event_config* cfg);
+            |
+            |<B>int</B> <I>event_config_avoid_method</I>(<B>struct</B> event_config* cfg, <B>const char*</B> method);
+            |<B>int</B> <I>event_config_require_features</I>(<B>struct</B> event_config* cfg, <B>enum</B> event_method_feature feature);
+            |<B>int</B> <I>event_config_set_flag</I>(<B>struct</B> event_config* cfg, <B>enum</B> event_base_config_flag flag);
+            |<B>int</B> <I>event_config_set_num_cpus_hint</I>(<B>struct</B> event_config* cfg, int cpus);
+            |<B>int</B> <I>event_config_set_max_dispatch_interval</I>(<B>struct</B> event_config *, <B>const struct</B> timeval *max_interval, <B>int</B> max_callbacks, <B>int</B> min_priority);
+                }>];
+        }
+
+        subgraph cluster_event_config_require {
+            label = <查询<I>event_base</I>返回<I>event_config</I>信息>;
+            style=dashed;
+
+            require_function [shape=record, label=<{
+                     <B>const char</B>** <I>event_get_supported_methods</I>(void);
+                    |<B>const char</B>* <I>event_base_get_method</I>(<B>const struct</B> event_base *base);
+                    |<B>enum</B> event_method_feature <I>event_base_get_features</I>(<B>const struct</B> event_base *base);
+                }>];
+        }
+
+
+        subgraph cluster_event_method_feature {
+            style=dashed;
+            label = <<B>enum <I>event_method_feature</I></B>>
+            event_method_feature [shape=record, style=rounded,
+            label="{EV_FEATURE_ET = 0x01,|EV_FEATURE_O1 = 0x02,|EV_FEATURE_FDS =
+            0x04,}"];
+        }
+
+        subgraph cluster_event_base_config_flag {
+            style=dashed;
+            label = <<B>enum <I>event_base_config_flag</I></B>>
+
+            event_base_config_flag [shape=record, style=rounded,
+            label="{EVENT_BASE_FLAG_NOLOCK = 0x01,|
+            EVENT_BASE_FLAG_IGNORE_ENV = 0x02,|
+            EVENT_BASE_FLAG_STARTUP_IOCP = 0x04,|
+            EVENT_BASE_FLAG_NO_CACHE_TIME = 0x08,|
+            EVENT_BASE_FLAG_EPOLL_USE_CHANGELIST = 0x10,|
+            EVENT_BASE_FLAG_PRECISE_TIMER = 0x20}"];
+        }
+    }
+
+    event_base_constructor -> event_base;
+    event_base_priority -> event_base;
+
+    event_base -> require_function [color="#a0592d"];
+    require_function -> event_config [color="#a0592d"];
+    event_config -> event_base_constructor;
+
+    event_config -> config_function [dir=both, arrowhead=lnormal, arrowtail=lnormal];
+    event_method_feature -> config_function;
+    event_base_config_flag -> config_function;
+
+
+    subgraph cluster_run_event_loop {
+        label = "Run Event Loop";
+        fontsize=22;
+        node [style = rounded];
+
+        
+        subgraph cluster_run_event_loop {
+            label="启动event队列"
+            style=dashed;
+
+            event_loop_start [
+                              shape=record,
+                              label = <{
+                                          <B>int</B> <I>event_base_loop</I>(<B>struct</B> event_base *base, <B>int</B> flags);
+                                        | <B>int</B> <I>event_base_dispatch</I>(<B>struct</B> event_base *base);
+                                       }>
+                             ];
+            event_base -> event_loop_start [color="#00ff00"];
+        }
+
+        subgraph cluster_event_loop_start_flags {
+            label="启动event队列参数"
+            style=dashed;
+
+            event_loop_start_flags [
+                                    shape = record,
+                                    label = <{
+                                                #define EVLOOP_ONCE 0x01
+                                              | #define EVLOOP_NONBLOCK 0x02
+                                              | #define EVLOOP_NO_EXIT_ON_EMPTY 0x04
+                                             }>
+                                   ];
+            event_loop_start_flags -> event_loop_start;
+        }
+
+        subgraph cluster_event_loop_stop {
+            label="退出event循环"
+            style=dashed;
+
+            event_loop_stop [
+                             shape=record,
+                             label = <{
+                                          <B>int</B> <I>event_base_loopexit</I>(<B>struct</B> event_base *base, <B>const struct</B> timeval *tv);
+                                        | <B>int</B> <I>event_base_loopbreak</I>(<B>struct</B> event_base *base);
+                                        | <B>int</B> <I>event_base_got_exit</I> (<B>struct</B> event_base *base);
+                                        | <B>int</B> <I>event_base_got_break</I>(<B>struct</B> event_base *base);
+                                        |
+                                        | <B>int</B> <I>event_base_loopcontinue</I>(<B>struct</B> event_base *);
+                                        |
+                                        | <B>void</B> <I>event_base_dump_events</I>(<B>struct</B> event_base *base, <B>FILE</B> *f);
+                                      }>
+                            ];
+            event_base -> event_loop_stop;
+        }
+
+        subgraph cluster_event_callback_runtime  {
+            label="回调处理时间"
+            style=dashed;
+
+            event_callback_runtime [
+                                    shape = record,
+                                    label = <{
+                                                  <B>int</B> <I>event_base_gettimeofday_cached</I>(<B>struct</B> event_base *base, <B>struct</B> timeval *tv_out);
+                                                | <B>int</B> <I>event_base_update_cache_time</I>(<B>struct</B> event_base *base);
+                                             }>
+                                   ];
+
+            event_base -> event_callback_runtime;
+        }
+    }
+
+    subgraph cluster_event_operation {
+        label = <<B>event</B> operation>;
+        fontsize=22;
+        node [style=rounded];
+
+        event_struct [
+            shape=box,
+            style=rounded,
+            color=red
+            label=<<B>struct</B> <I>event</I>>
+        ]
+
+        subgraph cluster_run_event_loop {
+            label="创建一个struct event"
+            style=dashed;
+
+        event_construct_function [
+            shape=record,
+            label=<{
+                      <B>typedef void</B> (*<I>event_callback_fn</I>)(evutil_socket_t, <B>short</B>, <B>void</B> *);
+                    | <B>struct</B> event *event_new(<B>struct</B> event_base *base, evutil_socket_t fd, <B>short</B> what, event_callback_fn cb, <B>void</B> *arg); 
+                    | <B>void</B> *event_self_cbarg();
+                    | <B>void</B> event_free(<B>struct</B> event *event);
+                    |
+                    | <B>int</B> <I>event_initialized</I>(<B>const struct</B> event *ev);
+                    |
+                    | <B>struct</B> event *event_assign(<B>struct</B> event *event, <B>struct</B> event_base *base, evutil_socket_t fd, <B>short</B> what, event_callback_fn cb, <B>void</B> *arg); 
+            }>];
+
+        event_base -> event_construct_function [color="#00ff00"];
+        event_construct_function -> event_struct;
+        }
+        subgraph cluster_event_timer_macro {
+            label="定时器相关"
+            style=dashed;
+
+            event_timer_macro [
+                shape=record,
+                label=<{
+                          #define <B>evtimer_new</B>(base, callback, arg) <B>event_new</B>((base), -1, 0, (callback), (arg))
+                        | #define <B>evtimer_add</B>(ev, tv) <B>event_add</B>((ev),(tv))
+                        | #define <B>evtimer_del</B>(ev) <B>event_del</B>(ev)
+                        | #define <B>evtimer_pending</B>(ev, tv_out) <B>event_pending</B>((ev), EV_TIMEOUT, (tv_out))
+                        |
+                        | #define <B>evtimer_assign</B>(event, base, callback, arg) <B>event_assign</B>(event, base, -1, 0, callback, arg)
+                }>
+            ];
+            event_timer_macro -> event_struct;
+        }
+        subgraph cluster_event_signal_macro {
+            label="信号相关"
+            style=dashed;
+
+            event_signal_macro [
+                shape=record,
+                label=<{
+                          #define <B>evsignal_add</B>(ev, tv) <B>event_add</B>((ev),(tv))
+                        | #define <B>evsignal_del</B>(ev) <B>event_del</B>(ev)
+                        | #define <B>evsignal_pending</B>(ev, what, tv_out) <B>event_pending</B>((ev), (what), (tv_out))
+                        |
+                        | #define <B>evsignal_assign</B>(event, base, signum, callback, arg) <B>event_assign</B>(event, base, signum, EV_SIGNAL \| EV_PERSIST, callback, arg)
+                }>
+            ];
+            event_signal_macro -> event_struct;
+        }
+
+        subgraph cluster_event_op_function  {
+            label="管理event队列"
+            style=dashed;
+
+            event_op_function [
+                shape=record,
+                label=<{
+                          <B>int</B> <I>event_priority_set</I>(<B>struct</B> event *event, <B>int</B> priority);
+                        |
+                        | <B>int</B> <I>event_add</I>(<B>struct</B> event *ev, <B>const struct</B> timeval *tv);
+                        | <B>int</B> <I>event_del</I>(<B>struct</B> event *ev);
+                        | <B>int</B> <I>event_remove_timer</I>(<B>struct</B> event *ev);
+                        |
+                        | <B>void</B> <I>event_active</I>(<B>struct</B> event *ev, <B>int</B> what, <B>short</B> ncalls);
+                }>
+            ];
+            event_struct -> event_op_function;
+        }
+
+        subgraph cluster_event_struct_other {
+            label="提取struct event的信息"
+            style=dashed;
+
+            event_status_inspect [
+                shape=record,
+                label=<{
+                          <B>int</B> <I>event_pending</I>(<B>const struct</B> event *ev, <B>short</B> what, <B>struct</B> timeval *tv_out);
+                        | evutil_socket_t <I>event_get_fd</I>(<B>const struct</B> event *ev);
+                        | <B>struct</B> event_base *<I>event_get_base</I>(<B>const struct</B> event *ev);
+                        | <B>short</B> <I>event_get_events</I>(<B>const struct</B> event *ev);
+                        | event_callback_fn <I>event_get_callback</I>(<B>const struct</B> event *ev);
+                        | <B>void</B> *<I>event_get_callback_arg</I>(<B>const struct</B> event *ev);
+                        | <B>int</B> <I>event_get_priority</I>(<B>const struct</B> event *ev);
+                        | <B>void</B> <I>event_get_assignment</I>(<B>const struct</B> event *event, <B>struct</B> event_base **base_out, evutil_socket_t *fd_out, <B>short</B> *events_out, event_callback_fn *callback_out, <B>void</B> **arg_out);
+                }>
+            ];
+            event_status_inspect -> event_struct;
+        }
+
+        subgraph cluster_event_struct_other {
+            label="struct event其它操作"
+            style=dashed;
+
+            event_struct_other [
+                shape=record,
+                label=<{
+                        | <B>size_t</B> <I>event_get_struct_event_size</I>(<B>void</B>);
+                        | <B>struct</B> event *<I>event_base_get_running_event</I>(<B>struct</B> event_base *base);
+                        | <B>int</B> <I>event_base_once</I>(<B>struct</B> event_base *, evutil_socket_t, <B>short</B>, <B>void</B> (*)(evutil_socket_t, short, void *), <B>void</B> *, <B>const struct</B> timeval *);
+                        | <B>const struct</B> timeval *<I>event_base_init_common_timeout</I>(<B>struct</B> event_base *base, <B>const struct</B> timeval *duration);
+                }>
+            ];
+            event_struct_other -> event_struct;
+        }
+    }
+
+    subgraph cluster_event_utils {
+        label="utils函数";
+        fontsize=22;
+
+        subgraph cluster_event_timer_utils {
+            label="时间维护函数";
+
+            event_timer_utils [
+                shape=record,
+                label=<{
+                          #define <I>evutil_timeradd</I>(tvp, uvp, vvp) /* ... */
+                        | #define <I>evutil_timersub</I>(tvp, uvp, vvp) /* ... */
+                        | #define <I>evutil_timerclear</I>(tvp) /* ... */
+                        | #define <I>evutil_timerisset</I>(tvp) /* ... */
+                        | #define <I>evutil_timercmp</I>(tvp, uvp, cmp)
+                        | <B>int</B> <I>evutil_gettimeofday</I>(<B>struct</B> timeval *tv, <B>struct</B> timezone *tz);
+                }>
+            ];
+        }
+
+        subgraph cluster_event_sockets {
+            label="socket维护函数";
+
+            even_sockets_utils [
+                    shape=record,
+                    label=<{
+                              <B>int</B> <I>evutil_closesocket</I>(evutil_socket_t s);
+                            | #define <I>EVUTIL_CLOSESOCKET</I>(s) evutil_closesocket(s)
+                            | #define <I>EVUTIL_SOCKET_ERROR</I>()
+                            | #define <I>EVUTIL_SET_SOCKET_ERROR</I>(errcode)
+                            | #define <I>evutil_socket_geterror</I>(sock)
+                            | #define <I>evutil_socket_error_to_string</I>(errcode)
+                            |
+                            | <B>int</B> <I>evutil_make_socket_nonblocking</I>(evutil_socket_t sock);
+                            | <B>int</B> <I>evutil_make_listen_socket_reuseable</I>(evutil_socket_t sock);
+                            | <B>int</B> <I>evutil_make_socket_closeonexec</I>(evutil_socket_t sock);
+                            | <B>int</B> <I>evutil_socketpair</I>(<B>int</B> family, <B>int</B> type, <B>int</B> protocol, evutil_socket_t sv[2]);
+                            | IPV6相关
+                            | <B>const char</B> *<I>evutil_inet_ntop</I>(<B>int</B> af, <B>const void</B> *src, <B>char</B> *dst, <B>size_t</B> len);
+                            | <B>int</B> <I>evutil_inet_pton</I>(<B>int</B> af, <B>const char</B> *src, <B>void</B> *dst);
+                            | <B>int</B> <I>evutil_parse_sockaddr_port</I>(<B>const char</B> *str, <B>struct</B> sockaddr *out, <B>int</B> *outlen);
+                            | <B>int</B> <I>evutil_sockaddr_cmp</I>(<B>const struct</B> sockaddr *sa1, <B>const struct</B> sockaddr *sa2, <B>int</B> include_port);
+                    }>
+            ];
+        }
+
+        subgraph cluster_event_random {
+            label="随机数生成函数";
+
+            even_random_utils [
+                    shape=record,
+                    label=<{
+                              <B>void</B> <I>evutil_secure_rng_get_bytes</I>(<B>void</B> *buf, <B>size_t</B> n);
+                            |
+                            | <B>int</B> <I>evutil_secure_rng_init</I>(<B>void</B>);
+                            | <B>void</B> <I>evutil_secure_rng_add_bytes</I>(<B>const char</B> *dat, <B>size_t</B> datlen);
+                    }>
+            ];
+        }
+    }
+
+    subgraph cluster_connection_listener {
+        label="Connection Listeners";
+        fontsize=22;
+        node [shape=box, style=rounded];
+
+        subgraph cluster_create_listener {
+            label="Create and Free Listener";
+            style=dashed;
+
+            create_listener [
+                shape=record,
+                label=<{
+                    | <B>struct</B> evconnlistener *<I>evconnlistener_new</I>(<B>struct</B> event_base *base, evconnlistener_cb cb, <B>void</B> *ptr, <B>unsigned</B> flags, <B>int</B> backlog, evutil_socket_t fd);
+                    | <B>struct</B> evconnlistener *<I>evconnlistener_new_bind</I>(<B>struct</B> event_base *base, evconnlistener_cb cb, <B>void</B> *ptr, <B>unsigned</B> flags, <B>int</B> backlog, <B>const struct</B> sockaddr *sa, <B>int</B> socklen);
+                    | <B>void</B> <I>evconnlistener_free</I>(<B>struct</B> evconnlistener *lev);
+                }>
+            ];
+        }
+
+        subgraph cluster_create_listener_flags {
+            label="Create and Free Listener";
+            style=dashed;
+
+            create_listener_flags [
+                shape=record,
+                label=<{
+                          LEV_OPT_LEAVE_SOCKETS_BLOCKING
+                        | LEV_OPT_CLOSE_ON_FREE
+                        | LEV_OPT_CLOSE_ON_EXEC
+                        | LEV_OPT_REUSEABLE
+                        | LEV_OPT_THREADSAFE
+                        | LEV_OPT_DISABLED
+                        | LEV_OPT_DEFERRED_ACCEPT
+                }>
+            ];
+        }
+
+        create_listener_flags -> create_listener;
+
+        listener_callback [
+                shape=box,
+                style=rounded,
+                label=<<B>typedef void</B> (*<I>evconnlistener_cb</I>)(<B>struct</B> evconnlistener *listener, evutil_socket_t sock, <B>struct</B> sockaddr *addr, <B>int</B> len, <B>void</B> *ptr);>
+        ];
+
+        listener_callback -> create_listener;
+
+        subgraph cluster_listener_op {
+            label="Create and Free Listener";
+            style=dashed;
+
+            listener_op [
+                shape=record,
+                label=<{
+                          <B>int</B>  <I>evconnlistener_disable</I>(<B>struct</B> evconnlistener *lev);
+                        | <B>int</B>  <I>evconnlistener_enable</I> (<B>struct</B> evconnlistener *lev);
+                        |
+                        | <B>void</B> <I>evconnlistener_set_cb</I> (<B>struct</B> evconnlistener *lev, evconnlistener_cb cb, <B>void</B> *arg);
+                        | evutil_socket_t <I>evconnlistener_get_fd</I>(<B>struct</B> evconnlistener *lev);
+                        | struct event_base *<I>evconnlistener_get_base</I>(<B>struct</B> evconnlistener *lev);
+                        |
+                        | <B>typedef void</B> (*<I>evconnlistener_errorcb</I>)(<B>struct</B> evconnlistener *lis, <B>void</B> *ptr);
+                        | <B>void</B> <I>evconnlistener_set_error_cb</I>(<B>struct</B> evconnlistener *lev, evconnlistener_errorcb errorcb);
+                }>
+            ];
+
+            create_listener -> listener_op;
+
+        }
+    }
+}

@@ -10,6 +10,7 @@
 .. toctree::
     :maxdepth: 1
 
+    todolist
     learning
     firefox
     bash
@@ -25,7 +26,6 @@
     php
     nginx_directive
     mediawiki
-    docker
     mail
     lvm
     samba_ads
@@ -49,6 +49,7 @@ docker
 .. toctree::
     :maxdepth: 1
 
+    docker
     pxe
 
 数据库
@@ -118,6 +119,9 @@ docker
     libpcap
     libevent
     epoll
+    multiprocess
+    inline_link_problem
+    shadowsocks
 
 Python
 ------
@@ -143,6 +147,9 @@ Python
     live_finace
     travel_wuyi
     iamprogramer
+    taiwan
+    economy
+    bigdata_trend
 
 
 Indices and tables

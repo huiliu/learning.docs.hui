@@ -8,7 +8,7 @@ MySQL配置Master-Slave
 
 1.  配置一个Master服务器
 
-    1.  配置文件
+    1.  开启\ ``binlog``\ ，设置一个唯一的服务器ID。配置文件
         
         .. code-block:: ini
 
@@ -47,10 +47,10 @@ MySQL配置Master-Slave
 
             START SLAVE;
 
-建立新的Slave
+Data snapshot
 ===============
-建立全新Slave的关键在：\ **在最小影响情况下如何获取一份Master的数据？**\
-即克隆Master。
+如果Master库中已经有数据，建立一个Slave库则需要一份Master库数据的snapshot。对
+master库进行snapshot有多种方法：
 
 方法一 **mysqldump**
 ----------------------
@@ -58,10 +58,11 @@ MySQL配置Master-Slave
 但是此方法存在严重的问题，因为\ `mysqldump`\ 操作需要锁定数据的写操作，会导致数\
 据库一定时间内无法写入数据，相关服务可能会受到影响。
 
-1.  刷新并锁定数据库，防止再导出数据时数据库发生变化
+1.  刷新并锁定数据库写操作，防止再导出数据时数据库发生变化
 
     .. code-block:: sql
 
+        -- 在终端1执行
         FLUSH TABLES WITH READ LOCK;
 
 2.  记录Master上binlog的位置。如下面bin-log文件为: “\ *mysql-bin.000015*\ ”，\
@@ -69,12 +70,13 @@ MySQL配置Master-Slave
 
     .. code-block:: sql
 
+        -- 在终端2执行
         SHOW MASTER STATUS;
         -- *************************** 1. row ***************************
         --                        File: mysqld-bin.000015
-        --                    Position: 245
-        --                Binlog_Do_DB: 
-        --            Binlog_Ignore_DB: 
+        --                        Position: 245
+        --                        Binlog_Do_DB: 
+        --                        Binlog_Ignore_DB: 
         -- 1 row in set (0.00 sec)
 
 3.  利用命令\ `mysqldump`\ 导出Master上的数据，完成后解锁Master
@@ -93,15 +95,24 @@ MySQL配置Master-Slave
         
         mysql --host=slave-1 -u root -p < backup-2013xxxx.sql
 
-5.  连接Master-Slave，并启动Slave
+方法二: 更简单的\ ``mysqldump``
+----------------------------------
+在slave库的服务器上运行：
 
-    .. code-block:: sql
+.. sourcecode:: shell
 
-        CHANGE MASTER TO MASTER_HOST='master', MASTER_PORT=3306, MASTER_USER='replication', MASTER_PASSWORD='replication', MASTER_LOG_FILE='mysql-bin.000015', MASTER_LOG_POS=245;
+    mysqlpdump --all-databases --master-data | mysql
 
-        START SLAVE;
+选项\ ``--master-data``\ 将会锁定所有表，不允许写操作；同时插入\ ``CHANGE
+MASTER TO``\ 语句；并在完成时释放锁。
 
-方法二：从Slave上克隆数据
+.. warning::
+
+    如果你只同步一部分数据(\ ``mysqldump``\ 只dump了部分数据)，需要在slave的配置
+    文件中指明（设置过滤器），
+
+
+方法三：从Slave上克隆数据
 -------------------------
 如果本来就存在着一个Master-Slave关系，就可以方便的在不影响任何服务的情况下建立一个新的Slave——从Slave上复制数据至新的Slave。操作类似于从Master复制数据。
 
@@ -146,29 +157,58 @@ MySQL配置Master-Slave
 
         START SLAVE;
 
-其它备份MySQL数据的方法
-========================
+方法四：使用Raw数据文件
+------------------------
+如果数据库比较大，拷贝raw数据文件的方法比\ ``mysqldump``\ 更加有效。同时拷贝\
+raw数据的方法与表所使用的引擎、缓存和日志方案都有关系。
+
+如果master和slave的配置选项\ ``ft_stopword_file, ft_min_word_len,
+ft_max_word_len``\ 值不相同，或者需要拷贝的表使用全文索引，不能使用这种方法。
+
+另外，可以排除一些文件：
+*   ``mysql``\ 库相关的文件
+*   master信息文件
+*   binlog文件
+*   relay log文件
+
+为了保证数据的一致性，在拷贝raw数据文件时，按下面的步骤操作：
+
+1.  在一个终端获取一个读锁，并查看master的状态
+2.  在另一个终端关闭master服务\ ``mysqladmin shutdown``
+3.  拷贝MySQL数据文件
+4.  重启master服务
+
+如果使用的是\ ``InnoDB``\ 引擎，可以在不停止服务的情形下创建一个snapshot
+
+1.  在一个终端获取一个读锁，并查看master的状态
+2.  拷贝MySQL数据文件
+3.  重启master服务
+
 
 
 故障说明
 =========
-运行主从同步时，出现如下情况：
+1.  运行主从同步时，出现如下情况：
 
-.. code-block:: text
+    .. code-block:: text
+    
+        Slave_IO_Running: Connecting
+        Slave_SQL_Running: Yes
+    
+    从网上查询了一下原因，大家提到的有：
+    
+    1.  log_file_pos不正确
+    2.  同步帐户设置不正确
+    3.  网络问题
+    
+    全都试着重新完成一遍，结果没有解决，看看日志发现是“\ **binlog找不到**\ ”，\
+    再回头看看主库，binlog被清除了。
+    
+    一句话：\ ``出错的原因可能有千百种，看日志才是王道。``
 
-    Slave_IO_Running: Connecting
-    Slave_SQL_Running: Yes
+2.  如果master/slave的\ ``server-id``\ 没有设置，master和slave将无法建立连接；
+    如果master/slave的\ ``server-id``\ 一样，命令行会提示出错。
 
-从网上查询了一下原因，大家提到的有：
-
-1.  log_file_pos不正确
-2.  同步帐户设置不正确
-3.  网络问题
-
-全都试着重新完成一遍，结果没有解决，看看日志发现是“\ **binlog找不到**\ ”，\
-再回头看看主库，binlog被清除了。
-
-一句话：\ ``出错的原因可能有千百种，看日志才是王道。``
 
 参考资料
 ==========

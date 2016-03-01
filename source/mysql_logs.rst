@@ -73,8 +73,7 @@ binlog的清除
     删除。个人认为对于稳定的服务（产生的数据量稳定），且建立的主从复制，此功能\
     是一个不错的选择。
 2.  ``RESET MASTER``
-3.  ``PURGE BINARY LOGS``
-    PURGE语句可以指定log名或者日期。相应的语法：
+3.  ``PURGE BINARY LOGS``\ PURGE语句可以指定log名或者日期。相应的语法：
 
     .. sourcecode:: sql
 
@@ -134,23 +133,34 @@ binlog中有三个方式来保存数据的变化：
 2.  基于行的（row-based）
 3.  混合的（statement-based）
 
-Slow query log
-==============
+慢查询日志(Slow query log)
+============================
 与慢查询相关的重要系统变量有：
 
 1.  ``slow_query_log = OFF|ON`` 慢查询日志是否开启的开关
 2.  ``long_query_time = N`` 判断是否属于慢查询的阀值。单位microsecond
 3.  ``min_examined_row_limit = 0``  被影响的最小行数
-4.  ``log_queries_not_using_indxes = OFF|ON``  是否记录未使用索引的查询
+4.  ``log_queries_not_using_indexes = OFF|ON``  是否记录未使用索引的查询。\
+    如果一个经常执行的SQL操作没有使用索引，开启此选项，可以导致慢查询日志文件\
+    快速增长。MySQL 5.6.5引入了一个新的参数\
+    ``log_throttle_queries_not_using_indexes``\ 用于设定每分钟记录（非索引操作\
+    ）的最大次数。
 5.  ``log_slow_admin_statements = OFF|ON`` 是否记录执行较慢的admin操作
 6.  ``slow_query_log_file = file_name`` 慢查询日志文件名
 
 决定一个请求是否被记录至慢查询日志的步骤：
 
-1.  选项\ ``log_slow_admin_statements``\ 开启或查询为非admin操作
+1.  选项\ ``log_slow_admin_statements``\ 开启或查询为非administrative
+    statement
 2.  执行时间超过\ ``long_query_time``\ 阀值或查询未使用索引且选项\
-    ``log_queries_not_using_indxes``\ 开启
-3.  操作影响力的行数超过\ ``min_examined_row_limit``\ 设定值
+    ``log_queries_not_using_indexes``\ 开启
+3.  操作影响的行数超过\ ``min_examined_row_limit``\ 设定值
+4.  满足变量\ ``log_throttle_queries_not_using_indexes``\ (MySQL 5.6.5引入)的限\
+    制
+
+分析慢查询日志文件
+-------------------
+使用命令\ ``mysqldumpslow``\ 来统计分析慢查询日志。
 
 .. warning::
 

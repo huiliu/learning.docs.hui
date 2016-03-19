@@ -1,0 +1,22 @@
+折磨人的字符编码问题
+*********************
+网页因为乱码显示的一团糟就不说了。说下比较少见的情形。
+
+
+.. author:: default
+.. categories:: program
+.. tags:: utf8, program
+.. comments::
+.. more::
+
+
+
+UTF-8和UTF-8 BOM
+=================
+查看一下\ `Notepad++`_\ 的格式菜单就会发现
+
+.. _Notepad++:  http://notepad-plus-plus.org/
+
+
+参考资料
+========

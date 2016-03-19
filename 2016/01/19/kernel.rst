@@ -1,0 +1,126 @@
+学习内核相关知识
+******************
+
+.. author:: default
+.. categories:: kernel
+.. tags:: kernel, security, network, 优化
+.. comments::
+.. more::
+
+
+
+使用TCP Socket还是Unix Socket
+==============================
+
+引
+---
+我在想，负载均衡器，前端要与用户连接，后端要与Web Server连接，如果用户超多，系\
+统的端口会够用么？
+
+So，今天重新配置Nginx反向代理时，想将主机上的php-fpm设置为uninx socket形式，结\
+果还给整错了，整了好一会才搞定的：
+
+* php-fpm配置：
+
+.. sourcecode:: ini
+
+    ; /etc/php/fpm-php5.4/php-fpm.conf
+
+    # listen = 127.0.0.1:9000
+    listen = /var/run/php-fpm.socket
+
+* Nginx的配置
+
+.. sourcecode:: nginx
+
+    fastcgi_pass    unix:/var/run/php-fpm.socket;
+
+完成上面的设置就可以让Nginx通过Uninx Socket与PHP-FPM通信。
+
+网上的一些讨论
+----------------
+然而在网上看到了一些这方面的讨论：
+
+* 淘宝运维发生过，流量升高\ **TIME_WAIT**\ 增加，最后在error.log中出现N多(3W+) \
+  的连接MySQL失败。经他们分析认为是因为流量增大，服务器端口不够用引起的。\ [#]_
+* 另外有人说，用\ **Unix Socket**\ 并没有太大作用\ [#]_
+* 介绍针对**TIME_WAIT**情况，内核的优化：
+
++-----------------------------------------------+------------------------------+
+| **内核参数**                                  | 功能说明                     |
++===============================================+==============================+
+| **net.ipv4.tcp_syncookies** = 1               | 表示开启SYN Cookies。当出现\ |
+|                                               | SYN等待队列溢出时,启用cookies|
+|                                               | 来处理，可防范少量SYN攻击，默|
+|                                               | 认为0，表示关闭；            |
++-----------------------------------------------+------------------------------+
+| **net.ipv4.tcp_tw_reuse** = 1                 | 表示开启重用。允许将TIME-WAIT|
+|                                               | sockets重新用于新的TCP连接， |
+|                                               | 默认为0，表示关闭；          |
++-----------------------------------------------+------------------------------+
+| **net.ipv4.tcp_tw_recycle** = 1               | 表示开启TCP连接中TIME-WAIT \ |
+|                                               | sockets的快速回收，默认为0， |
+|                                               | 表示关闭。                   |
++-----------------------------------------------+------------------------------+
+| **net.ipv4.tcp_fin_timeout** = 30             | 表示如果套接字由本端要求关闭 |
+|                                               | ，这个参数决定了它保持在\    |
+|                                               | FIN-WAIT-2状态的时间。       |
++-----------------------------------------------+------------------------------+
+| **net.ipv4.tcp_keepalive_time** = 1200        | 表示当keepalive起用的时候，\ |
+|                                               | TCP发送keepalive消息的频度。 |
+|                                               | 缺省是2小时，改为20分钟。    |
++-----------------------------------------------+------------------------------+
+| **net.ipv4.ip_local_port_range** = 1024 65000 | 表示用于向外连接的端口范围。 |
+|                                               | 缺省情况下很小：32768到61000 |
+|                                               | ，改为1024到65000。          |
++-----------------------------------------------+------------------------------+
+| **net.ipv4.tcp_max_syn_backlog** = 8192       | 表示SYN队列的长度，默认为1024|
+|                                               | ，加大队列长度为8192，可以容 |
+|                                               | 纳更多等待连接的网络连接数。 |
++-----------------------------------------------+------------------------------+
+| **net.ipv4.tcp_max_tw_buckets** = 5000        | 表示系统同时保持TIME_WAIT套接|
+|                                               | 字的最大数量，如果超过这个数 |
+|                                               | 字，TIME_WAIT套接字将立刻被清|
+|                                               | 除并打印警告信息。           |
+|                                               |                              |
+|                                               | 默认为180000，改为5000。对于 |
+|                                               | Apache、Nginx等服务器，上几行|
+|                                               | 的参数可以很好地减少TIME_WAIT|
+|                                               | 套接字数量，但是对于Squid，效|
+|                                               | 果却不大。此项参数可以控制\  |
+|                                               | TIME_WAIT套接字的最大数量，避|
+|                                               | 免Squid服务器被大量的\       |
+|                                               | TIME_WAIT套接字拖死。        |
++-----------------------------------------------+------------------------------+
+
+
+``TIME_WAIT``\ 引发的日志提示
+------------------------------
+当系统中处于\ ``TIME_WAIT``\ 状态的连接数超过\ ``net.ipv4.tcp_max_tw_buckets``\
+的设定值，系统日志中将出现如下消息：
+
+.. sourcecode:: text
+
+    printk: 130 messages suppressed.
+    TCP: time wait bucket table overflow
+    printk: 75 messages suppressed.
+    TCP: time wait bucket table overflow
+    printk: 119 messages suppressed.
+    TCP: time wait bucket table overflow
+    printk: 23 messages suppressed.
+    TCP: time wait bucket table overflow
+    printk: 123 messages suppressed.
+
+
+调试I/O - 查看是哪个进程在读写硬盘
+====================================
+将\ "**/proc/sys/vm/block_dump**"\ 的值修改为非零值，将进入I/O调试模式，系统中\
+所有的I/O操作都将在内核日志中输出，使用\ `dmesg | tail`\ 就可以看到。
+
+内核文档\ "*Dowcument/sysctl/vm.txt*"\ 和\ "*Document/laptop/laptop-mode.txt*"\
+中对文件\ *block_dump*\ 的功能有介绍。
+
+参考资料
+========
+.. [#]  http://www.searchtb.com/2012/05/mysql_time_wait.html
+.. [#]  http://www.cnxct.com/default-configuration-and-performance-of-nginx-phpfpm-and-tcp-socket-or-unix-domain-socket/

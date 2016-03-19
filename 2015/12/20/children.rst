@@ -1,0 +1,27 @@
+小孩教育
+********
+
+.. author:: default
+.. categories:: life, learn
+.. tags:: life, reading, learn
+.. comments::
+.. more::
+
+
+古人教小孩的第一个字：\ ``孝``
+
+言教不如身教。
+
+读万卷书不如行万里路。
+
+责任：\ [#]_
+
+孝：立身行道，扬名于后世，以显父母。
+
+网易公开课，中国公安大学，《犯罪心理学》
+
+
+
+参考资料
+=========
+.. [#]  https://class.coursera.org/shiji-001/lecture/15

@@ -4,6 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2016/03/24/new_operator
    2016/03/19/shadowsocks
    2016/03/19/const_and_this
    2016/02/15/const_modifier

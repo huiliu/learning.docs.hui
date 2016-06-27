@@ -70,7 +70,7 @@ first_page_title = None
 extensions = ['tinkerer.ext.blog', 'tinkerer.ext.disqus',
                 'sphinx.ext.autodoc', 'sphinx.ext.doctest',
                 'sphinx.ext.intersphinx', 'sphinx.ext.graphviz',
-                'sphinx.ext.todo', 'sphinx.ext.coverage', 'sphinx.ext.pngmath',
+                'sphinx.ext.todo', 'sphinx.ext.coverage',
                 'sphinx.ext.mathjax', 'sphinx.ext.viewcode', 'sphinx.ext.todo']
 
 # Add other template paths here

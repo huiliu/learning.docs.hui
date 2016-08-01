@@ -4,6 +4,7 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2016/08/01/generate_exe_file_from_python
    2016/06/27/extending_embedded_python
    2016/03/24/new_operator
    2016/03/19/shadowsocks

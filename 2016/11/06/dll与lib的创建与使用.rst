@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 DLL与LIB的创建与使用
 **********************
 记录分别Visuall Studio 2015和GCC创建和使用动态库与静态库的\

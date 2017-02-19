@@ -104,4 +104,4 @@ version = tinkerer.__version__
 release = tinkerer.__version__
 html_title = project
 html_show_sourcelink = False
-html_add_permalinks = "UTF-8"
+#html_add_permalinks = "UTF-8"

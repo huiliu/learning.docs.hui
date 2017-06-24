@@ -5,7 +5,7 @@
 
 .. author:: default
 .. categories:: none
-.. tags:: none
+.. tags:: Program, c/c++
 .. comments::
 .. more::
 

@@ -4,7 +4,7 @@
 制件自己的编程语言之基础，字节码解释器，也是一个mini虚拟机。
 
 .. author:: default
-.. categories:: none
+.. categories:: Program
 .. tags:: Program, c/c++
 .. comments::
 .. more::

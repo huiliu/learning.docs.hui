@@ -2,8 +2,8 @@
 ******
 
 .. author:: default
-.. categories:: none
-.. tags:: 游戏开发, network
+.. categories:: Game Develop
+.. tags:: Game Develop, Network
 .. comments::
 
 什么是帧同步？

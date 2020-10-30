@@ -2,23 +2,11 @@
 #####################
 
 
-
-.. author:: default
-.. categories:: security
-.. tags:: devops, security, network
-.. comments::
-.. more::
-
-
-
-
-
 .. author:: default
 .. categories:: devops
 .. tags:: devops, deploy
 .. comments::
 .. more::
-
 
 
 控制文件的结构

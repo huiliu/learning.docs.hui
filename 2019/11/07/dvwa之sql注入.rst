@@ -15,7 +15,7 @@ DVWA之SQL注入
 使用\ ``1' or 1=1;--``\ 进行注入，失败！
 但是得到了一个错误提示：
 
-.. code-block:: none
+.. code-block:: text
 
     You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '--' AND password = '8d777626bb90b3fe578edd23f606e9a9'' at line 1
 
@@ -23,7 +23,7 @@ DVWA之SQL注入
 SQL的注释符不就是 *\-\-* 吗，怎么会报错呢？查一下\ *MariaDB*\ 的\ `网站 <https://mariadb.com/kb/en/library/comment-syntax/>`_\ 看看。
 原来\ **注释符 *\-\-* 后面是有一个空格的**\ 。
 
-重新使用\ ``1' or 1=1;-- ``\ 注入，成功！哈哈
+重新使用\ ``1' or 1=1;--``\ 注入，成功！哈哈
 
 SQL注释
 --------

@@ -4,6 +4,11 @@ Sitemap
 .. toctree::
    :maxdepth: 1
 
+   2020/07/10/firebase_cloud_messaging_云消息推送
+   2020/07/08/android应用权限
+   2020/07/03/android分享
+   2020/07/02/android通用功能
+   2020/07/01/android沉浸模式
    2017/11/23/一颗子弹的产生
    2017/11/19/游戏人工智能
    2017/09/01/网络设计时的考虑
